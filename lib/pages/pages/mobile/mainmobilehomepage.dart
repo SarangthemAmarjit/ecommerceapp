@@ -1,9 +1,11 @@
-import 'package:ecommerceapp/main.dart';
+import 'dart:developer';
+
 import 'package:ecommerceapp/pages/view/landing/components/DealPage.dart';
 import 'package:ecommerceapp/pages/view/landing/components/Whatsnewpage.dart';
 import 'package:ecommerceapp/pages/view/landing/components/deliverypage.dart';
 import 'package:ecommerceapp/pages/view/landing/controller/landing_controller.dart';
 import 'package:ecommerceapp/pages/view/landing/desktoplanding.dart';
+import 'package:ecommerceapp/pages/view/landing/widget/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -269,30 +271,12 @@ class _MainMobileLandingpageState extends State<MainMobileLandingpage> {
 
   Widget _buildDrawerContent() {
     final categories = [
-      {
-        'icon': Icons.chair_outlined,
-        'name': 'Furniture',
-      },
-      {
-        'icon': Icons.shopping_bag_outlined,
-        'name': 'Hand Bag',
-      },
-      {
-        'icon': Icons.sports_soccer_outlined,
-        'name': 'Shoe',
-      },
-      {
-        'icon': Icons.headphones_outlined,
-        'name': 'Headphone',
-      },
-      {
-        'icon': Icons.laptop_outlined,
-        'name': 'Laptop',
-      },
-      {
-        'icon': Icons.book_outlined,
-        'name': 'Book',
-      },
+      {'icon': Icons.chair_outlined, 'name': 'Furniture'},
+      {'icon': Icons.shopping_bag_outlined, 'name': 'Hand Bag'},
+      {'icon': Icons.sports_soccer_outlined, 'name': 'Shoe'},
+      {'icon': Icons.headphones_outlined, 'name': 'Headphone'},
+      {'icon': Icons.laptop_outlined, 'name': 'Laptop'},
+      {'icon': Icons.book_outlined, 'name': 'Book'},
     ];
 
     LandingController lancon = Get.put(LandingController());
@@ -312,10 +296,7 @@ class _MainMobileLandingpageState extends State<MainMobileLandingpage> {
               const SizedBox(width: 12),
               const Text(
                 'Shopcart',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -423,7 +404,10 @@ class _MainMobileLandingpageState extends State<MainMobileLandingpage> {
                 children: [
                   // Logo
                   InkWell(
-                    onTap: () => landcon.setcurrentpage('landing'),
+                    onTap: () {
+                      log('clicking landingdsds');
+                      landcon.setcurrentpage('landing');
+                    },
                     child: Row(
                       children: [
                         SizedBox(
@@ -492,7 +476,8 @@ class _MainMobileLandingpageState extends State<MainMobileLandingpage> {
                   ),
                   const SizedBox(width: 20),
                   // Cart
-                  if (width >= 600) _buildIconButton(Icons.shopping_cart_outlined, 'Cart'),
+                  if (width >= 600)
+                    _buildIconButton(Icons.shopping_cart_outlined, 'Cart'),
                   const SizedBox(width: 12),
                   if (width >= 800)
                     OutlinedButton(
@@ -544,15 +529,14 @@ class _MainMobileLandingpageState extends State<MainMobileLandingpage> {
                           child: landcon.currentPage == 'landing'
                               ? getPage(landcon.currentPage)
                               : Column(
-                                  children: [
-                                    getPage(landcon.currentPage),
-                                  ],
+                                  children: [getPage(landcon.currentPage)],
                                 ),
                         ),
                       ),
                     ],
                   ),
-                  if (showCategoryDropdown && width >= 1100) _buildCategoryDropdown(),
+                  if (showCategoryDropdown && width >= 1100)
+                    _buildCategoryDropdown(),
                 ],
               );
             },

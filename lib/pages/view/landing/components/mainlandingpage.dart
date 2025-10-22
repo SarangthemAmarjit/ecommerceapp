@@ -1,9 +1,11 @@
-import 'package:ecommerceapp/main.dart';
+import 'dart:developer';
+
 import 'package:ecommerceapp/pages/view/landing/components/DealPage.dart';
 import 'package:ecommerceapp/pages/view/landing/components/Whatsnewpage.dart';
 import 'package:ecommerceapp/pages/view/landing/components/deliverypage.dart';
 import 'package:ecommerceapp/pages/view/landing/controller/landing_controller.dart';
 import 'package:ecommerceapp/pages/view/landing/desktoplanding.dart';
+import 'package:ecommerceapp/pages/view/landing/widget/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -73,23 +75,28 @@ class _MainLandingpageState extends State<MainLandingpage> {
   }
 
   Widget _buildNavItem(String title, {bool hasDropdown = false}) {
-    LandingController lancon = Get.put(LandingController());
-    final isSelected = lancon.currentPage == title;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: AnimatedNavItem(
-        title: title,
-        isSelected: isSelected,
-        hasDropdown: hasDropdown,
-        showCategoryDropdown: showCategoryDropdown,
-        onTap: () {
-          if (hasDropdown && title == 'Category') {
-            toggleCategoryDropdown();
-          } else {
-            lancon.setcurrentpage(title);
-          }
-        },
-      ),
+    LandingController lancon = Get.find<LandingController>();
+
+    return GetBuilder<LandingController>(
+      builder: (_) {
+        final isSelected = lancon.currentPage == title;
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: AnimatedNavItem(
+            title: title,
+            isSelected: isSelected,
+            hasDropdown: hasDropdown,
+            showCategoryDropdown: showCategoryDropdown,
+            onTap: () {
+              if (hasDropdown && title == 'Category') {
+                toggleCategoryDropdown();
+              } else {
+                lancon.setcurrentpage(title);
+              }
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -300,184 +307,180 @@ class _MainLandingpageState extends State<MainLandingpage> {
 
   @override
   Widget build(BuildContext context) {
-    final LandingController landcon = Get.put(LandingController());
+    final LandingController landcon = Get.find<LandingController>();
     final double width = MediaQuery.of(context).size.width;
-    return GetBuilder<LandingController>(
-      builder: (_) {
-        return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            toolbarHeight: 80,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        toolbarHeight: 80,
 
-            titleSpacing: 0,
-            title: Container(
-              height: 75,
-              padding: const EdgeInsets.only(left: 150, right: 20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
+        titleSpacing: 0,
+        title: Container(
+          height: 75,
+          padding: const EdgeInsets.only(left: 150, right: 20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              // Logo
+              InkWell(
+                onTap: () {
+                  log('clicking landing');
+                  landcon.setcurrentpage('landing');
+                },
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 40,
+                      height: 40,
+
+                      child: Image.asset(height: 30, 'assets/images/logo.webp'),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Shopcart',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 0, 61, 41),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 60),
+              // Navigation Menu
+              if (width >= 1100)
+                Row(
+                  children: [
+                    _buildNavItem('Category', hasDropdown: true),
+                    const SizedBox(width: 30),
+                    _buildNavItem('Deals'),
+                    const SizedBox(width: 30),
+                    _buildNavItem('What\'s New'),
+                    const SizedBox(width: 30),
+                    _buildNavItem('Delivery'),
+                  ],
+                ),
+              const Spacer(),
+              // Search Bar
+              Container(
+                width: 300,
+                height: 45,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: TextField(
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search Product',
+                    hintStyle: TextStyle(
+                      color: Colors.grey.shade500,
+                      fontSize: 14,
+                    ),
+                    suffixIcon: InkWell(
+                      onTap: () {
+                        // admincon.performSearch(
+                        //   landcon.searchcont.text.trim(),
+                        // );
+                      },
+
+                      child: Icon(Icons.search),
+                    ),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 30),
+              // Account
+
+              // Cart
+              _buildIconButton(Icons.shopping_cart_outlined, 'Cart'),
+              const SizedBox(width: 20),
+              OutlinedButton(
+                onPressed: () {
+                  // log('login');
+                  // Get.toNamed(AppRoutes.login);
+                },
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                  side: const BorderSide(color: Colors.blue),
+                ),
+                child: const Text(
+                  "Login",
+                  style: TextStyle(color: Colors.blue),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: GetBuilder<LandingController>(
+        builder: (_) {
+          return Stack(
+            children: [
+              Column(
+                children: [
+                  if (width >= 800 && width < 1100)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildNavItem('Category', hasDropdown: true),
+                          const SizedBox(width: 30),
+                          _buildNavItem('Deals'),
+                          const SizedBox(width: 30),
+                          _buildNavItem('What\'s New'),
+                          const SizedBox(width: 30),
+                          _buildNavItem('Delivery'),
+                        ],
+                      ),
+                    ),
+
+                  // TopNavWithModalMenu(),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      controller: landcon.scrollController,
+                      child: landcon.currentPage == 'landing'
+                          ? getPage(landcon.currentPage)
+                          : Column(
+                              children: [
+                                getPage(landcon.currentPage),
+                                // FooterSection(),
+                              ],
+                            ),
+                    ),
                   ),
                 ],
               ),
-              child: Row(
-                children: [
-                  // Logo
-                  InkWell(
-                    onTap: () => landcon.setcurrentpage('landing'),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 40,
-                          height: 40,
-
-                          child: Image.asset(
-                            height: 30,
-                            'assets/images/logo.webp',
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          'Shopcart',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 0, 61, 41),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 60),
-                  // Navigation Menu
-                  if (width >= 1100)
-                    Row(
-                      children: [
-                        _buildNavItem('Category', hasDropdown: true),
-                        const SizedBox(width: 30),
-                        _buildNavItem('Deals'),
-                        const SizedBox(width: 30),
-                        _buildNavItem('What\'s New'),
-                        const SizedBox(width: 30),
-                        _buildNavItem('Delivery'),
-                      ],
-                    ),
-                  const Spacer(),
-                  // Search Bar
-                  Container(
-                    width: 300,
-                    height: 45,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: TextField(
-                      controller: searchController,
-                      decoration: InputDecoration(
-                        hintText: 'Search Product',
-                        hintStyle: TextStyle(
-                          color: Colors.grey.shade500,
-                          fontSize: 14,
-                        ),
-                        suffixIcon: InkWell(
-                          onTap: () {
-                            // admincon.performSearch(
-                            //   landcon.searchcont.text.trim(),
-                            // );
-                          },
-
-                          child: Icon(Icons.search),
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 30),
-                  // Account
-
-                  // Cart
-                  _buildIconButton(Icons.shopping_cart_outlined, 'Cart'),
-                  const SizedBox(width: 20),
-                  OutlinedButton(
-                    onPressed: () {
-                      // log('login');
-                      // Get.toNamed(AppRoutes.login);
-                    },
-                    style: OutlinedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
-                      ),
-                      side: const BorderSide(color: Colors.blue),
-                    ),
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          body: GetBuilder<LandingController>(
-            builder: (_) {
-              return Stack(
-                children: [
-                  Column(
-                    children: [
-                      if (width >= 800 && width < 1100)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              _buildNavItem('Category', hasDropdown: true),
-                              const SizedBox(width: 30),
-                              _buildNavItem('Deals'),
-                              const SizedBox(width: 30),
-                              _buildNavItem('What\'s New'),
-                              const SizedBox(width: 30),
-                              _buildNavItem('Delivery'),
-                            ],
-                          ),
-                        ),
-
-                      // TopNavWithModalMenu(),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          controller: landcon.scrollController,
-                          child: landcon.currentPage == 'landing'
-                              ? getPage(landcon.currentPage)
-                              : Column(
-                                  children: [
-                                    getPage(landcon.currentPage),
-                                    // FooterSection(),
-                                  ],
-                                ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (showCategoryDropdown) _buildCategoryDropdown(),
-                ],
-              );
-            },
-          ),
-        );
-      },
+              if (showCategoryDropdown) _buildCategoryDropdown(),
+            ],
+          );
+        },
+      ),
     );
   }
 }

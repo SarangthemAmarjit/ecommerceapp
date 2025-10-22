@@ -1,12 +1,7 @@
 import 'dart:developer';
 
-
-
-import 'package:ecommerceapp/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-
 
 class LandingController extends GetxController {
   TextEditingController searchcont = TextEditingController();
@@ -91,28 +86,13 @@ class LandingController extends GetxController {
   //     resetScroll();
   //   }
 
-
   // }
 
-    void setcurrentpage(String page) async {
+  void setcurrentpage(String page) {
+    log("page : " + page);
     // _istermpage = false;
     _currentpage = page;
     update();
-    resetScroll();
-  }
-
-  String? getlinkUrl(String title) {
-    switch (title) {
-      case 'CMIS':
-        return 'https://cmis.man.nic.in/sevaarth/home1/sevaarthhome.php';
-      case 'NPS':
-        return 'https://cra-nsdl.com/CRA/';
-      case 'Employee Corner':
-        return 'https://cmis.man.nic.in/sevaarth/home1/sevaarthhome.php';
-
-      default:
-        return null;
-    }
   }
 
   String? getpdfUrl(String title) {
@@ -169,8 +149,4 @@ class LandingController extends GetxController {
   //   // Get.find<LoginController>().getUserToken();
   //   Get.offAllNamed('/');
   // }
-
-
-
-
 }
