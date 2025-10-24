@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:ecommerceapp/pages/pages/ecommerce_page/product_details/product_details_view.dart';
+import 'package:ecommerceapp/pages/pages/ecommerce_page/product_list/product_list_view.dart';
 import 'package:ecommerceapp/pages/view/landing/components/DealPage.dart';
 import 'package:ecommerceapp/pages/view/landing/components/Whatsnewpage.dart';
 import 'package:ecommerceapp/pages/view/landing/components/deliverypage.dart';
@@ -31,6 +33,12 @@ class _MainLandingpageState extends State<MainLandingpage> {
     switch (title) {
       case 'landing':
         return const DesktopLandingPage();
+      case 'productlist':
+        return const ProductListView();
+
+      case 'productdetails':
+        return const ProductDetailsView();
+
       case 'Deals':
         return const Dealpage();
       case 'What\'s New':

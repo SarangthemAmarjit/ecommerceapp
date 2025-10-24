@@ -1,11 +1,14 @@
 import 'package:ecommerceapp/pages/view/landing/components/footer.dart';
+import 'package:ecommerceapp/pages/view/landing/controller/landing_controller.dart';
 import 'package:ecommerceapp/pages/view/landing/landing2.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class DesktopLandingPage extends StatelessWidget {
   const DesktopLandingPage({super.key});
 
   Widget buildHeroContent(BuildContext context) {
+    LandingController lancon = Get.put(LandingController());
     return Container(
       width: double.infinity,
       height: MediaQuery.of(context).size.height - 88,
@@ -48,7 +51,7 @@ class DesktopLandingPage extends StatelessWidget {
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: () {
-                  // Learn More action
+                  lancon.setcurrentpage('productlist');
                 },
                 child: Card(
                   shape: RoundedRectangleBorder(
@@ -66,7 +69,7 @@ class DesktopLandingPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: const Text(
-                      'Learn More',
+                      'Get Started',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
