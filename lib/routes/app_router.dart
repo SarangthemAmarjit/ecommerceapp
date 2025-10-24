@@ -1,10 +1,5 @@
+// import 'package:ecommerceapp/routes/app_routes.dart';
 // import 'package:go_router/go_router.dart';
-// import 'package:misdeptapp/routes/app_routes.dart';
-// import 'package:misdeptapp/views/landing/home_screen.dart';
-// import 'package:misdeptapp/views/login/Admin%20Panel/adminmain.dart';
-// import 'package:misdeptapp/views/login/login_screen.dart';
-// import 'package:misdeptapp/views/pages/commonhelppage.dart';
-// import 'package:misdeptapp/views/pages/handlerpage.dart';
 
 // final GoRouter appRouter = GoRouter(
 //   routes: [

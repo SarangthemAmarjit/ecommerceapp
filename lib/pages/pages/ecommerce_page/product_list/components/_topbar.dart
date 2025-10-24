@@ -1,11 +1,10 @@
 // 🐦 Flutter imports:
-import 'package:flutter/material.dart';
-
 // 📦 Package imports:
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
-import '/core/generated/l10n.dart' as l;
 
+import '/core/generated/l10n.dart' as l;
 // 🌎 Project imports:
 import '/core/helpers/fuctions/_overlay_helper.dart';
 import '/core/helpers/helpers.dart';
@@ -48,37 +47,37 @@ class _TopbarState extends State<Topbar> {
   //--------------------Search Field Props--------------------//
 
   List<String> get filterList => [
-        //'Sort by Popularity',
-        l.S.current.sortByPopularity,
-        // 'Sort by Newest First',
-        l.S.current.sortByNewestFirst,
-        //'Sort by Oldest First',
-        l.S.current.sortByOldestFirst,
-        //'Sort by Price: Low to High',
-        l.S.current.sortByPriceLowToHigh,
-        //'Sort by Price: High to Low',
-        l.S.current.sortByPriceHighToLow,
-        //'Sort by Best Rating',
-        l.S.current.sortByBestRating,
-        //'Sort by Most Reviewed',
-        l.S.current.sortByMostReviewed,
-        //'Sort by Featured',
-        l.S.current.sortByFeatured,
-        //'Sort by Relevance',
-        l.S.current.sortByRelevance,
-        //'Sort by Discount',
-        l.S.current.sortByDiscount,
-        // 'Sort by Alphabetical: A-Z',
-        l.S.current.sortByAlphabeticalAZ,
-        //'Sort by Alphabetical: Z-A',
-        l.S.current.sortByAlphabeticalZA,
-        //'Sort by Closest Location',
-        l.S.current.sortByClosestLocation,
-        //'Sort by Trending',
-        l.S.current.sortByTrending,
-        //'Sort by Most Liked',
-        l.S.current.sortByMostLiked,
-      ];
+    //'Sort by Popularity',
+    l.S.current.sortByPopularity,
+    // 'Sort by Newest First',
+    l.S.current.sortByNewestFirst,
+    //'Sort by Oldest First',
+    l.S.current.sortByOldestFirst,
+    //'Sort by Price: Low to High',
+    l.S.current.sortByPriceLowToHigh,
+    //'Sort by Price: High to Low',
+    l.S.current.sortByPriceHighToLow,
+    //'Sort by Best Rating',
+    l.S.current.sortByBestRating,
+    //'Sort by Most Reviewed',
+    l.S.current.sortByMostReviewed,
+    //'Sort by Featured',
+    l.S.current.sortByFeatured,
+    //'Sort by Relevance',
+    l.S.current.sortByRelevance,
+    //'Sort by Discount',
+    l.S.current.sortByDiscount,
+    // 'Sort by Alphabetical: A-Z',
+    l.S.current.sortByAlphabeticalAZ,
+    //'Sort by Alphabetical: Z-A',
+    l.S.current.sortByAlphabeticalZA,
+    //'Sort by Closest Location',
+    l.S.current.sortByClosestLocation,
+    //'Sort by Trending',
+    l.S.current.sortByTrending,
+    //'Sort by Most Liked',
+    l.S.current.sortByMostLiked,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -113,12 +112,14 @@ class _TopbarState extends State<Topbar> {
               _buildLayoutSelector(context)
             // Drawer Opener
             else
-              IconButton(
-                onPressed: () {
-                  return widget.scaffoldKey.currentState?.openDrawer();
-                },
-                icon: const Icon(Icons.menu),
-              ),
+              _buildDropdownFiltersforcategory(context)[0],
+
+            // IconButton(
+            //   onPressed: () {
+            //     return widget.scaffoldKey.currentState?.openDrawer();
+            //   },
+            //   icon: const Icon(Icons.menu),
+            // ),
 
             // Trailing Items
             Flexible(
@@ -147,9 +148,7 @@ class _TopbarState extends State<Topbar> {
                               horizontal: 12,
                               vertical: 6,
                             ),
-                            visualDensity: const VisualDensity(
-                              vertical: -2,
-                            ),
+                            visualDensity: const VisualDensity(vertical: -2),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
                             ),
@@ -186,9 +185,7 @@ class _TopbarState extends State<Topbar> {
 
   Widget _buildSearchField(BuildContext context) {
     final lang = l.S.of(context);
-    const _border = OutlineInputBorder(
-      borderSide: BorderSide.none,
-    );
+    const _border = OutlineInputBorder(borderSide: BorderSide.none);
     return TextField(
       controller: searchController,
       autofocus: true,
@@ -212,9 +209,7 @@ class _TopbarState extends State<Topbar> {
         IconButton(
           onPressed: () {
             if (!showSearch) {
-              return FocusScope.of(context).requestFocus(
-                searchFieldFocus,
-              );
+              return FocusScope.of(context).requestFocus(searchFieldFocus);
             }
           },
           icon: const Icon(IconlyLight.search),
@@ -234,6 +229,84 @@ class _TopbarState extends State<Topbar> {
     );
   }
 
+  List<Widget> _buildDropdownFiltersforcategory(BuildContext context) {
+    final lang = l.S.of(context);
+    final ThemeData(:colorScheme, :textTheme, :checkboxTheme) = Theme.of(
+      context,
+    );
+    final _dropdownStyle = AcnooDropdownStyle(context);
+
+    return [
+      // Layout Selector Dropdown (replaces _buildLayoutSelector row)
+      Flexible(
+        child: DropdownButton2<ProductLayoutType>(
+          iconStyleData: _dropdownStyle.iconStyle.copyWith(iconSize: 18),
+          dropdownStyleData: _dropdownStyle.dropdownStyle.copyWith(
+            useRootNavigator: true,
+            width: 180,
+          ),
+          menuItemStyleData: _dropdownStyle.menuItemStyle,
+          underline: const SizedBox.shrink(),
+          value: widget.selectedLayout,
+          items: ProductLayoutType.values.map((layout) {
+            final _isSelected = layout == widget.selectedLayout;
+            return DropdownMenuItem<ProductLayoutType>(
+              value: layout,
+              child: Row(
+                children: [
+                  Icon(
+                    layout.icon,
+                    color: _isSelected
+                        ? colorScheme.primary
+                        : checkboxTheme.side?.color,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    layout.name, // assuming you have a readable name getter
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: _isSelected ? colorScheme.primary : null,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+          // onChanged: widget.onLayoutSelect,
+        ),
+      ),
+
+      const SizedBox(width: 8),
+      VerticalDivider(
+        indent: 8,
+        endIndent: 8,
+        color: colorScheme.outline,
+        thickness: 1.25,
+      ),
+
+      // Per-page Dropdown
+      Flexible(
+        child: DropdownButton2<int>(
+          iconStyleData: _dropdownStyle.iconStyle.copyWith(iconSize: 16),
+          dropdownStyleData: _dropdownStyle.dropdownStyle.copyWith(
+            useRootNavigator: true,
+          ),
+          menuItemStyleData: _dropdownStyle.menuItemStyle,
+          underline: const SizedBox.shrink(),
+          value: widget.perPage,
+          items: List<DropdownMenuItem<int>>.generate(10, (index) {
+            final _item = (index + 1) * 10;
+            return DropdownMenuItem<int>(
+              value: _item,
+              child: Text('${lang.show} $_item'),
+            );
+          }),
+          onChanged: widget.onPerpageChange,
+        ),
+      ),
+    ];
+  }
+
   List<Widget> _buildDropdownFilters(BuildContext context) {
     final lang = l.S.of(context);
     final ThemeData(:colorScheme, :textTheme) = Theme.of(context);
@@ -241,9 +314,7 @@ class _TopbarState extends State<Topbar> {
     return [
       Flexible(
         child: DropdownButton2<int>(
-          iconStyleData: _dropdownStyle.iconStyle.copyWith(
-            iconSize: 16,
-          ),
+          iconStyleData: _dropdownStyle.iconStyle.copyWith(iconSize: 16),
           dropdownStyleData: _dropdownStyle.dropdownStyle.copyWith(
             useRootNavigator: true,
           ),
@@ -288,25 +359,20 @@ class _TopbarState extends State<Topbar> {
       // Per-page Dropdown
       Flexible(
         child: DropdownButton2(
-          iconStyleData: _dropdownStyle.iconStyle.copyWith(
-            iconSize: 16,
-          ),
+          iconStyleData: _dropdownStyle.iconStyle.copyWith(iconSize: 16),
           dropdownStyleData: _dropdownStyle.dropdownStyle.copyWith(
             useRootNavigator: true,
           ),
           menuItemStyleData: _dropdownStyle.menuItemStyle,
           underline: const SizedBox.shrink(),
           value: widget.perPage,
-          items: List<DropdownMenuItem<int>>.generate(
-            10,
-            (index) {
-              final _item = (index + 1) * 10;
-              return DropdownMenuItem<int>(
-                value: _item,
-                child: Text('${lang.show} $_item'),
-              );
-            },
-          ),
+          items: List<DropdownMenuItem<int>>.generate(10, (index) {
+            final _item = (index + 1) * 10;
+            return DropdownMenuItem<int>(
+              value: _item,
+              child: Text('${lang.show} $_item'),
+            );
+          }),
           onChanged: widget.onPerpageChange,
         ),
       ),
@@ -324,9 +390,7 @@ class _TopbarState extends State<Topbar> {
       ),
       child: Container(
         padding: const EdgeInsetsDirectional.all(10),
-        decoration: BoxDecoration(
-          color: _theme.colorScheme.primaryContainer,
-        ),
+        decoration: BoxDecoration(color: _theme.colorScheme.primaryContainer),
         child: Column(
           children: [
             // Search Field
@@ -342,7 +406,7 @@ class _TopbarState extends State<Topbar> {
             ),
 
             // Layouts
-            _buildLayoutSelector(context)
+            _buildLayoutSelector(context),
           ],
         ),
       ),
