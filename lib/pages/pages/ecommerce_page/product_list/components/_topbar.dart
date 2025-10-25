@@ -81,25 +81,25 @@ class _TopbarState extends State<Topbar> {
 
   @override
   Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
+    final theme = Theme.of(context);
     final lang = l.S.of(context);
-    final _border = BorderSide(color: _theme.colorScheme.outline);
-    final _overlayHelper = OverlayHelper(context);
+    final border = BorderSide(color: theme.colorScheme.outline);
+    final overlayHelper = OverlayHelper(context);
 
     return CompositedTransformTarget(
-      link: _overlayHelper.layerLink,
+      link: overlayHelper.layerLink,
       child: Container(
         constraints: BoxConstraints.loose(const Size.fromHeight(48)),
         decoration: BoxDecoration(
-          color: _theme.colorScheme.primaryContainer,
+          color: theme.colorScheme.primaryContainer,
           border: widget.selectedLayout == ProductLayoutType.border
               ? BorderDirectional(
-                  start: _border.copyWith(width: 0.5),
-                  end: _border,
-                  top: _border,
-                  bottom: _border,
+                  start: border.copyWith(width: 0.5),
+                  end: border,
+                  top: border,
+                  bottom: border,
                 )
-              : (widget.showDesktop ? BorderDirectional(start: _border) : null),
+              : (widget.showDesktop ? BorderDirectional(start: border) : null),
           borderRadius: const BorderRadiusDirectional.horizontal(
             end: Radius.circular(4),
           ),
@@ -112,14 +112,13 @@ class _TopbarState extends State<Topbar> {
               _buildLayoutSelector(context)
             // Drawer Opener
             else
-              _buildDropdownFiltersforcategory(context)[0],
-
-            // IconButton(
-            //   onPressed: () {
-            //     return widget.scaffoldKey.currentState?.openDrawer();
-            //   },
-            //   icon: const Icon(Icons.menu),
-            // ),
+              // _buildDropdownFiltersforcategory(context)[0],
+              IconButton(
+                onPressed: () {
+                  return widget.scaffoldKey.currentState?.openDrawer();
+                },
+                icon: const Icon(Icons.menu),
+              ),
 
             // Trailing Items
             Flexible(
@@ -131,13 +130,13 @@ class _TopbarState extends State<Topbar> {
                         margin: const EdgeInsets.all(8),
                         child: OutlinedButton.icon(
                           onPressed: () {
-                            if (_overlayHelper.overlayEntry == null) {
-                              _overlayHelper.showOverlay(
+                            if (overlayHelper.overlayEntry == null) {
+                              overlayHelper.showOverlay(
                                 offset: const Offset(0, 4),
                                 child: _buildMobileFilter(context),
                               );
                             } else {
-                              _overlayHelper.hideOverlay();
+                              overlayHelper.hideOverlay();
                             }
                           },
                           // label: const Text('Filter'),
@@ -169,12 +168,12 @@ class _TopbarState extends State<Topbar> {
 
     return Row(
       children: ProductLayoutType.values.map((layout) {
-        final _isSelected = layout == widget.selectedLayout;
+        final isSelected = layout == widget.selectedLayout;
         return IconButton(
           onPressed: () => widget.onLayoutSelect?.call(layout),
-          isSelected: _isSelected,
+          isSelected: isSelected,
           icon: Icon(layout.icon),
-          color: _isSelected ? null : checkboxTheme.side?.color,
+          color: isSelected ? null : checkboxTheme.side?.color,
           iconSize: 20,
           visualDensity: const VisualDensity(),
           padding: EdgeInsets.zero,
@@ -185,7 +184,7 @@ class _TopbarState extends State<Topbar> {
 
   Widget _buildSearchField(BuildContext context) {
     final lang = l.S.of(context);
-    const _border = OutlineInputBorder(borderSide: BorderSide.none);
+    const border = OutlineInputBorder(borderSide: BorderSide.none);
     return TextField(
       controller: searchController,
       autofocus: true,
@@ -193,8 +192,8 @@ class _TopbarState extends State<Topbar> {
         //hintText: 'Search...',
         hintText: '${lang.search}...',
         filled: true,
-        enabledBorder: _border,
-        focusedBorder: _border,
+        enabledBorder: border,
+        focusedBorder: border,
       ),
     );
   }
@@ -234,29 +233,29 @@ class _TopbarState extends State<Topbar> {
     final ThemeData(:colorScheme, :textTheme, :checkboxTheme) = Theme.of(
       context,
     );
-    final _dropdownStyle = AcnooDropdownStyle(context);
+    final dropdownStyle = AcnooDropdownStyle(context);
 
     return [
       // Layout Selector Dropdown (replaces _buildLayoutSelector row)
       Flexible(
         child: DropdownButton2<ProductLayoutType>(
-          iconStyleData: _dropdownStyle.iconStyle.copyWith(iconSize: 18),
-          dropdownStyleData: _dropdownStyle.dropdownStyle.copyWith(
+          iconStyleData: dropdownStyle.iconStyle.copyWith(iconSize: 18),
+          dropdownStyleData: dropdownStyle.dropdownStyle.copyWith(
             useRootNavigator: true,
             width: 180,
           ),
-          menuItemStyleData: _dropdownStyle.menuItemStyle,
+          menuItemStyleData: dropdownStyle.menuItemStyle,
           underline: const SizedBox.shrink(),
           value: widget.selectedLayout,
           items: ProductLayoutType.values.map((layout) {
-            final _isSelected = layout == widget.selectedLayout;
+            final isSelected = layout == widget.selectedLayout;
             return DropdownMenuItem<ProductLayoutType>(
               value: layout,
               child: Row(
                 children: [
                   Icon(
                     layout.icon,
-                    color: _isSelected
+                    color: isSelected
                         ? colorScheme.primary
                         : checkboxTheme.side?.color,
                     size: 20,
@@ -265,7 +264,7 @@ class _TopbarState extends State<Topbar> {
                   Text(
                     layout.name, // assuming you have a readable name getter
                     style: textTheme.bodyMedium?.copyWith(
-                      color: _isSelected ? colorScheme.primary : null,
+                      color: isSelected ? colorScheme.primary : null,
                     ),
                   ),
                 ],
@@ -287,18 +286,18 @@ class _TopbarState extends State<Topbar> {
       // Per-page Dropdown
       Flexible(
         child: DropdownButton2<int>(
-          iconStyleData: _dropdownStyle.iconStyle.copyWith(iconSize: 16),
-          dropdownStyleData: _dropdownStyle.dropdownStyle.copyWith(
+          iconStyleData: dropdownStyle.iconStyle.copyWith(iconSize: 16),
+          dropdownStyleData: dropdownStyle.dropdownStyle.copyWith(
             useRootNavigator: true,
           ),
-          menuItemStyleData: _dropdownStyle.menuItemStyle,
+          menuItemStyleData: dropdownStyle.menuItemStyle,
           underline: const SizedBox.shrink(),
           value: widget.perPage,
           items: List<DropdownMenuItem<int>>.generate(10, (index) {
-            final _item = (index + 1) * 10;
+            final item = (index + 1) * 10;
             return DropdownMenuItem<int>(
-              value: _item,
-              child: Text('${lang.show} $_item'),
+              value: item,
+              child: Text('${lang.show} $item'),
             );
           }),
           onChanged: widget.onPerpageChange,
@@ -310,15 +309,15 @@ class _TopbarState extends State<Topbar> {
   List<Widget> _buildDropdownFilters(BuildContext context) {
     final lang = l.S.of(context);
     final ThemeData(:colorScheme, :textTheme) = Theme.of(context);
-    final _dropdownStyle = AcnooDropdownStyle(context);
+    final dropdownStyle = AcnooDropdownStyle(context);
     return [
       Flexible(
         child: DropdownButton2<int>(
-          iconStyleData: _dropdownStyle.iconStyle.copyWith(iconSize: 16),
-          dropdownStyleData: _dropdownStyle.dropdownStyle.copyWith(
+          iconStyleData: dropdownStyle.iconStyle.copyWith(iconSize: 16),
+          dropdownStyleData: dropdownStyle.dropdownStyle.copyWith(
             useRootNavigator: true,
           ),
-          menuItemStyleData: _dropdownStyle.menuItemStyle,
+          menuItemStyleData: dropdownStyle.menuItemStyle,
           underline: const SizedBox.shrink(),
           selectedItemBuilder: (ctx) => [
             ...filterList.map(
@@ -359,18 +358,18 @@ class _TopbarState extends State<Topbar> {
       // Per-page Dropdown
       Flexible(
         child: DropdownButton2(
-          iconStyleData: _dropdownStyle.iconStyle.copyWith(iconSize: 16),
-          dropdownStyleData: _dropdownStyle.dropdownStyle.copyWith(
+          iconStyleData: dropdownStyle.iconStyle.copyWith(iconSize: 16),
+          dropdownStyleData: dropdownStyle.dropdownStyle.copyWith(
             useRootNavigator: true,
           ),
-          menuItemStyleData: _dropdownStyle.menuItemStyle,
+          menuItemStyleData: dropdownStyle.menuItemStyle,
           underline: const SizedBox.shrink(),
           value: widget.perPage,
           items: List<DropdownMenuItem<int>>.generate(10, (index) {
-            final _item = (index + 1) * 10;
+            final item = (index + 1) * 10;
             return DropdownMenuItem<int>(
-              value: _item,
-              child: Text('${lang.show} $_item'),
+              value: item,
+              child: Text('${lang.show} $item'),
             );
           }),
           onChanged: widget.onPerpageChange,
@@ -380,17 +379,17 @@ class _TopbarState extends State<Topbar> {
   }
 
   Widget _buildMobileFilter(BuildContext context) {
-    final _theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Material(
-      color: _theme.colorScheme.primaryContainer,
+      color: theme.colorScheme.primaryContainer,
       clipBehavior: Clip.antiAlias,
       borderRadius: const BorderRadiusDirectional.vertical(
         bottom: Radius.circular(4),
       ),
       child: Container(
         padding: const EdgeInsetsDirectional.all(10),
-        decoration: BoxDecoration(color: _theme.colorScheme.primaryContainer),
+        decoration: BoxDecoration(color: theme.colorScheme.primaryContainer),
         child: Column(
           children: [
             // Search Field

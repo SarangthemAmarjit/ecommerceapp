@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
+
 import '/providers/providers.dart';
 import 'components/_components.dart' as comp;
 import 'layouts/layouts.dart' as layout;
@@ -38,148 +39,154 @@ class _ProductListViewState extends State<ProductListView> {
 
   @override
   Widget build(BuildContext context) {
-    final _productListProv =
-        Provider.of<ECommerceMockProductsNotifier>(context);
+    final productListProv = Provider.of<ECommerceMockProductsNotifier>(context);
 
-    final _theme = Theme.of(context);
-    final _mqSize = MediaQuery.sizeOf(context);
-    final _isDesktop = _mqSize.width >= 992;
+    final theme = Theme.of(context);
+    final mqSize = MediaQuery.sizeOf(context);
+    final isDesktop = mqSize.width >= 992;
 
-    final _padding = responsiveValue<double>(
+    final padding = responsiveValue<double>(
       context,
       xs: 16,
-      md: _isDesktop ? 24 : 16,
+      md: isDesktop ? 24 : 16,
       lg: 24,
     );
 
-    final _innerPadding = responsiveValue<EdgeInsetsGeometry?>(
+    final innerPadding = responsiveValue<EdgeInsetsGeometry?>(
       context,
-      xs: EdgeInsetsDirectional.symmetric(vertical: _padding),
-      md: _isDesktop
-          ? EdgeInsetsDirectional.fromSTEB(_padding, _padding, 0, 0)
+      xs: EdgeInsetsDirectional.symmetric(vertical: padding),
+      md: isDesktop
+          ? EdgeInsetsDirectional.fromSTEB(padding, padding, 0, 0)
           : null,
     );
 
-    return  ScrollbarTheme(
-        data: const ScrollbarThemeData(),
-        child: SingleChildScrollView(
-          controller: scrollController,
-          padding: EdgeInsetsDirectional.all(_padding / 2.5),
-          child: ResponsiveGridRow(
-            children: [
-              if (_isDesktop)
-                ResponsiveGridCol(
-                  lg: 3,
-                  md: _mqSize.width < 992 ? null : 3,
-                  child: Container(
-                    margin: EdgeInsetsDirectional.only(
-                      start: _padding / 2.5,
-                      bottom: _padding / 2.5,
-                      top: _padding / 2.5,
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadiusDirectional.only(
-                        topStart: Radius.circular(4),
-                        bottomStart: Radius.circular(4),
-                        bottomEnd: Radius.circular(4),
-                      ),
-                      border: currentLayout != comp.ProductLayoutType.border
-                          ? null
-                          : Border.all(color: _theme.colorScheme.outline),
-                    ),
-                    child: const comp.FilterSidebar(),
+    return Column(
+      children: [
+        Container(
+          color: const Color.fromARGB(255, 211, 246, 212),
+          width: mqSize.width,
+          height: 60,
+        ),
+        SizedBox(
+          height: mqSize.height - 60,
+          child: Scaffold(
+            backgroundColor: const Color.fromARGB(255, 248, 247, 242),
+            key: scaffoldKey,
+            drawer: isDesktop
+                ? null
+                : const Drawer(
+                    shape: RoundedRectangleBorder(),
+                    child: SingleChildScrollView(child: comp.FilterSidebar()),
                   ),
-                ),
-
-              // Product List
-              ResponsiveGridCol(
-                lg: 9,
-                md: _mqSize.width < 992 ? null : 9,
-                child: Padding(
-                  padding: _isDesktop
-                      ? EdgeInsetsDirectional.fromSTEB(
-                          0,
-                          0,
-                          _padding / 2.5,
-                          _padding / 2.5,
-                        )
-                      : EdgeInsets.all(_padding / 2.5),
-                  child: Column(
-                    children: [
-                      SizedBox(height: _padding / 2.5),
-                      comp.Topbar(
-                        scaffoldKey: scaffoldKey,
-                        showDesktop: _isDesktop,
-                        selectedLayout: currentLayout,
-                        onLayoutSelect: (value) => setState(
-                          () => currentLayout = value,
-                        ),
-                        perPage: showPerPage,
-                        onPerpageChange: (v) {
-                          if (currentPage > comp.PaginationWidget.pageCount) {
-                            setState(
-                              () =>
-                                  currentPage = comp.PaginationWidget.pageCount,
-                            );
-                          }
-                          _productListProv.loadProductsForPage(
-                            currentPage,
-                            v!,
-                          );
-                          setState(() => showPerPage = v);
-                        },
-                        filterId: filterId,
-                        onFilterChange: (v) => setState(() => filterId = v!),
+            body: ResponsiveGridRow(
+              children: [
+                if (isDesktop)
+                  ResponsiveGridCol(
+                    lg: 2,
+                    md: mqSize.width < 992 ? null : 3,
+                    child: Container(
+                      margin: EdgeInsetsDirectional.only(
+                        start: padding / 2.5,
+                        bottom: padding / 2.5,
+                        top: padding / 2.5,
                       ),
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadiusDirectional.only(
+                          topStart: Radius.circular(4),
+                          bottomStart: Radius.circular(4),
+                          bottomEnd: Radius.circular(4),
+                        ),
+                        border: currentLayout != comp.ProductLayoutType.border
+                            ? null
+                            : Border.all(color: theme.colorScheme.outline),
+                      ),
+                      child: const comp.FilterSidebar(),
+                    ),
+                  ),
 
-                      // Products
-                      switch (currentLayout) {
-                        comp.ProductLayoutType.grid ||
-                        comp.ProductLayoutType.border =>
-                          layout.ProductsGridLayout(
+                // Product List
+                ResponsiveGridCol(
+                  lg: 10,
+                  md: mqSize.width < 992 ? null : 9,
+                  child: Padding(
+                    padding: isDesktop
+                        ? EdgeInsetsDirectional.fromSTEB(
+                            0,
+                            0,
+                            padding / 2.5,
+                            padding / 2.5,
+                          )
+                        : EdgeInsets.all(padding / 2.5),
+                    child: Column(
+                      children: [
+                        SizedBox(height: padding / 2.5),
+                        comp.Topbar(
+                          scaffoldKey: scaffoldKey,
+                          showDesktop: isDesktop,
+                          selectedLayout: currentLayout,
+                          onLayoutSelect: (value) =>
+                              setState(() => currentLayout = value),
+                          perPage: showPerPage,
+                          onPerpageChange: (v) {
+                            if (currentPage > comp.PaginationWidget.pageCount) {
+                              setState(
+                                () => currentPage =
+                                    comp.PaginationWidget.pageCount,
+                              );
+                            }
+                            productListProv.loadProductsForPage(
+                              currentPage,
+                              v!,
+                            );
+                            setState(() => showPerPage = v);
+                          },
+                          filterId: filterId,
+                          onFilterChange: (v) => setState(() => filterId = v!),
+                        ),
+
+                        // Products
+                        switch (currentLayout) {
+                          comp.ProductLayoutType.grid ||
+                          comp
+                              .ProductLayoutType
+                              .border => layout.ProductsGridLayout(
                             showBorder:
                                 currentLayout == comp.ProductLayoutType.border,
-                            padding: _innerPadding,
+                            padding: innerPadding,
                           ),
-                        comp.ProductLayoutType.tile =>
-                          layout.ProductsListLayout(
-                            padding: _innerPadding,
-                          ),
-                      },
-                      const SizedBox(height: 24),
+                          comp.ProductLayoutType.tile =>
+                            layout.ProductsListLayout(padding: innerPadding),
+                        },
+                        const SizedBox(height: 24),
 
-                      // Pagination
-                      SizedBox(
-                        width: double.maxFinite,
-                        child: Align(
-                          child: comp.PaginationWidget(
-                            currentPage: currentPage,
-                            totalItem: _productListProv.totalProducts,
-                            perPage: showPerPage,
-                            onPagePress: (page) => _handlePageChange(
-                              page,
-                              _productListProv,
-                            ),
-                            onNextPressed: (page) => _handlePageChange(
-                              page,
-                              _productListProv,
-                            ),
-                            onPreviousPressed: (page) => _handlePageChange(
-                              page,
-                              _productListProv,
+                        // Pagination
+                        SizedBox(
+                          width: double.maxFinite,
+                          child: Align(
+                            child: comp.PaginationWidget(
+                              currentPage: currentPage,
+                              totalItem: productListProv.totalProducts,
+                              perPage: showPerPage,
+                              onPagePress: (page) =>
+                                  _handlePageChange(page, productListProv),
+                              onNextPressed: (page) =>
+                                  _handlePageChange(page, productListProv),
+                              onPreviousPressed: (page) =>
+                                  _handlePageChange(page, productListProv),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      );
+      ],
+    );
   }
 
   void _handlePageChange(int page, ECommerceMockProductsNotifier notifier) {
