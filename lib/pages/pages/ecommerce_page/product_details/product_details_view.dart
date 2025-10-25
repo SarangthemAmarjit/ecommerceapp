@@ -1,11 +1,13 @@
 // 🐦 Flutter imports:
+import 'package:ecommerceapp/pages/pages/ecommerce_page/product_list/info.dart';
+import 'package:ecommerceapp/pages/view/landing/controller/landing_controller.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 // 📦 Package imports:
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:responsive_grid/responsive_grid.dart';
-import '/core/generated/l10n.dart' as l;
 
+import '/core/generated/l10n.dart' as l;
 // 🌎 Project imports:
 import '/core/theme/theme.dart';
 import '/models/models.dart' show eCommerceMockproducts;
@@ -32,11 +34,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        tabController.animation?.addListener(() => setState(() {}));
-      },
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      tabController.animation?.addListener(() => setState(() {}));
+    });
   }
 
   @override
@@ -51,313 +51,334 @@ class _ProductDetailsViewState extends State<ProductDetailsView>
     final _theme = Theme.of(context);
     final lang = l.S.of(context);
     final _padding = responsiveValue<double>(context, xs: 6.4, lg: 9.6);
-
-    return SingleChildScrollView(
-        padding: EdgeInsets.all(_padding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ShadowContainer(
-              margin: EdgeInsets.all(_padding),
-              contentPadding: EdgeInsets.zero,
-              showHeader: false,
-              child: ResponsiveGridRow(
-                children: [
-                  // Product Images
-                  ResponsiveGridCol(
-                    md: 4,
-                    child: Padding(
-                      padding: EdgeInsets.all(_padding * 2.5),
-                      child: const l_comp.ProductImageViewer(),
-                    ),
-                  ),
-
-                  // Product Info
-                  ResponsiveGridCol(
-                    md: 8,
-                    child: Padding(
-                      padding: responsiveValue<EdgeInsetsGeometry>(
-                        context,
-                        xs: EdgeInsets.symmetric(horizontal: _padding * 2.5),
-                        md: EdgeInsetsDirectional.only(
-                          start: 24,
-                          top: _padding * 2.5,
-                          end: _padding * 2.5,
+    LandingController lancon = Get.put(LandingController());
+    return Column(
+      children: [
+        InfoBar(
+          ontapclosebutton: () {
+            lancon.setcurrentpage('productlist');
+          },
+        ),
+        SizedBox(
+          height: MediaQuery.sizeOf(context).height,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(_padding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ShadowContainer(
+                  margin: EdgeInsets.all(_padding),
+                  contentPadding: EdgeInsets.zero,
+                  showHeader: false,
+                  child: ResponsiveGridRow(
+                    children: [
+                      // Product Images
+                      ResponsiveGridCol(
+                        md: 4,
+                        child: Padding(
+                          padding: EdgeInsets.all(_padding * 2.5),
+                          child: const l_comp.ProductImageViewer(),
                         ),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Product Name
-                          Text(
-                            'Natures Deli Chicken & Rice Meatballs 100g | Just for Pets',
-                            style: _theme.textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
+
+                      // Product Info
+                      ResponsiveGridCol(
+                        md: 8,
+                        child: Padding(
+                          padding: responsiveValue<EdgeInsetsGeometry>(
+                            context,
+                            xs: EdgeInsets.symmetric(
+                              horizontal: _padding * 2.5,
+                            ),
+                            md: EdgeInsetsDirectional.only(
+                              start: 24,
+                              top: _padding * 2.5,
+                              end: _padding * 2.5,
                             ),
                           ),
-                          const SizedBox(height: 2),
-
-                          // Category Name
-                          Text(
-                            'Food',
-                            style: _theme.textTheme.bodyLarge?.copyWith(),
-                          ),
-                          const SizedBox(height: 2),
-
-                          // Rating & Review
-                          const g_comp.RatingNReviews(
-                            rating: 5,
-                            reviews: 200,
-                          ),
-                          const SizedBox(height: 10),
-
-                          // Stock Indicator
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AcnooAppColors.kSuccess20Op,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              lang.inStock,
-                              //'In Stock',
-                              style: _theme.textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.w500,
-                                color: AcnooAppColors.kSuccess,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-
-                          // Discount & Price
-                          ConstrainedBox(
-                            constraints: BoxConstraints.loose(
-                              const Size.fromWidth(225),
-                            ),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                g_comp.PriceDiscountBuilder(
-                                  price: 7.90,
-                                  discountPrice: 5.90,
-                                  fontSize: 24,
-                                ),
-                                g_comp.DiscountChip(discountAmount: 20),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 36),
-
-                          // Action Buttons
-                          Wrap(
-                            spacing: 20,
-                            runSpacing: 20,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Quantity Counter
-                              const SizedBox(
-                                height: 44,
-                                width: 145,
-                                child: CounterField(),
-                              ),
-
-                              // Add To Cart
-                              SizedBox(
-                                height: 44,
-                                child: ElevatedButton.icon(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                  ),
-                                  // label: const Text('Add to Cart'),
-                                  label: Text(lang.addToCart),
-                                  icon: const Icon(
-                                    Icons.shopping_cart_outlined,
-                                  ),
-                                  iconAlignment: IconAlignment.end,
+                              // Product Name
+                              Text(
+                                'Natures Deli Chicken & Rice Meatballs 100g | Just for Pets',
+                                style: _theme.textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
+                              const SizedBox(height: 2),
 
-                              // Add To Favorite
-                              SizedBox(
-                                height: 44,
-                                child: IconButton.outlined(
-                                  onPressed: () => setState(
-                                    () => isFavorite = !isFavorite,
-                                  ),
-                                  icon: Icon(
-                                    isFavorite
-                                        ? IconsaxPlusBold.heart
-                                        : IconsaxPlusLinear.heart,
-                                    color: isFavorite
-                                        ? _theme.colorScheme.primary
-                                        : null,
-                                  ),
-                                  style: IconButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 18,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    side: isFavorite
-                                        ? BorderSide(
-                                            color: _theme.colorScheme.primary,
-                                          )
-                                        : null,
-                                  ),
-                                ),
+                              // Category Name
+                              Text(
+                                'Food',
+                                style: _theme.textTheme.bodyLarge?.copyWith(),
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 24),
+                              const SizedBox(height: 2),
 
-                          // Description
-                          ...{
-                            "SKU": "1D0MX8SJ",
-                            "LIFE": "6 Months",
-                            "Type": "Original",
-                            "Tags": "Beverages, Dairy & Bakery",
-                          }.entries.map(
-                                (e) => _buildDescription(
-                                  context,
-                                  e,
-                                ),
+                              // Rating & Review
+                              const g_comp.RatingNReviews(
+                                rating: 5,
+                                reviews: 200,
                               ),
-                        ],
-                      ),
-                    ),
-                  ),
+                              const SizedBox(height: 10),
 
-                  // Reviews & Description
-                  ResponsiveGridCol(
-                    child: Padding(
-                      padding: responsiveValue<EdgeInsetsGeometry>(
-                        context,
-                        xs: const EdgeInsets.only(top: 24),
-                        md: EdgeInsets.symmetric(horizontal: _padding * 2.5),
-                      ),
-                      child: Column(
-                        children: [
-                          TabBar(
-                            controller: tabController,
-                            tabAlignment: responsiveValue<TabAlignment>(
-                              context,
-                              xs: TabAlignment.fill,
-                              md: TabAlignment.start,
-                            ),
-                            indicatorSize: TabBarIndicatorSize.tab,
-                            dividerColor: _theme.colorScheme.outline,
-                            indicator: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: _theme.colorScheme.primary,
-                                  width: 2,
+                              // Stock Indicator
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
                                 ),
-                              ),
-                              gradient: LinearGradient(
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
-                                stops: const [0.30, 0.75],
-                                colors: [
-                                  _theme.colorScheme.primary.withOpacity(0.16),
-                                  _theme.colorScheme.primary.withOpacity(0.05),
-                                ],
-                              ),
-                            ),
-                            isScrollable: responsiveValue<bool>(
-                              context,
-                              xs: false,
-                              md: true,
-                            ),
-                            tabs: [
-                              // Tab(text: 'Description'),
-                              // Tab(text: 'Reviews (25)'),
-                              Tab(
-                                text: lang.description,
-                              ),
-                              Tab(text: '${lang.reviews} (25)')
-                            ],
-                            labelColor: _theme.colorScheme.primary,
-                            unselectedLabelColor:
-                                _theme.colorScheme.onTertiaryContainer,
-                            labelStyle: _theme.textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: _padding * 2.5,
-                            ),
-                            child: [
-                              // Description
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: _padding,
+                                decoration: BoxDecoration(
+                                  color: AcnooAppColors.kSuccess20Op,
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Text(
-                                  '''Quisque varius diam vel metus mattis, id aliquam diam rhoncus. Proin vitae magna in dui finibus malesuada et at nulla. Morbi elit ex, viverra vitae ante vel, blandit feugiat ligula. Fusce fermentum iaculis nibh, at sodales leo maximus a. Nullam ultricies sodales nunc, in pellentesque lorem mattis quis. Cras imperdiet est in nunc tristique lacinia. Nullam aliquam mauris eu accumsan tincidunt. Suspendisse velit ex, aliquet vel ornare vel, dignissim a tortor.\n\nMorbi ut sapien vitae odio accumsan gravida. Morbi vitae erat auctor, eleifend nunc a, lobortis neque. Praesent aliquam dignissim viverra. Maecenas lacus odio, feugiat eu nunc sit amet, maximus sagittis dolor. Vivamus nisi sapien, elementum sit amet eros sit amet, ultricies cursus ipsum. Sed consequat luctus ligula. Curabitur laoreet rhoncus blandit. Aenean vel diam ut arcu pharetra dignissim ut sed leo. Vivamus faucibus, ipsum in vestibulum vulputate, lorem orci convallis quam, sit amet consequat nulla felis pharetra lacus. Duis semper erat mauris, sed egestas purus commodo vel.''',
+                                  lang.inStock,
+                                  //'In Stock',
                                   style: _theme.textTheme.bodyLarge?.copyWith(
-                                    color:
-                                        _theme.colorScheme.onTertiaryContainer,
+                                    fontWeight: FontWeight.w500,
+                                    color: AcnooAppColors.kSuccess,
                                   ),
                                 ),
                               ),
+                              const SizedBox(height: 12),
 
-                              // Reviews
-                              const ReviewList(),
-                            ][tabController.index],
+                              // Discount & Price
+                              ConstrainedBox(
+                                constraints: BoxConstraints.loose(
+                                  const Size.fromWidth(225),
+                                ),
+                                child: const Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    g_comp.PriceDiscountBuilder(
+                                      price: 7.90,
+                                      discountPrice: 5.90,
+                                      fontSize: 24,
+                                    ),
+                                    g_comp.DiscountChip(discountAmount: 20),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 36),
+
+                              // Action Buttons
+                              Wrap(
+                                spacing: 20,
+                                runSpacing: 20,
+                                children: [
+                                  // Quantity Counter
+                                  const SizedBox(
+                                    height: 44,
+                                    width: 145,
+                                    child: CounterField(),
+                                  ),
+
+                                  // Add To Cart
+                                  SizedBox(
+                                    height: 44,
+                                    child: ElevatedButton.icon(
+                                      onPressed: () {},
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                      ),
+                                      // label: const Text('Add to Cart'),
+                                      label: Text(lang.addToCart),
+                                      icon: const Icon(
+                                        Icons.shopping_cart_outlined,
+                                      ),
+                                      iconAlignment: IconAlignment.end,
+                                    ),
+                                  ),
+
+                                  // Add To Favorite
+                                  SizedBox(
+                                    height: 44,
+                                    child: IconButton.outlined(
+                                      onPressed: () => setState(
+                                        () => isFavorite = !isFavorite,
+                                      ),
+                                      icon: Icon(
+                                        isFavorite
+                                            ? IconsaxPlusBold.heart
+                                            : IconsaxPlusLinear.heart,
+                                        color: isFavorite
+                                            ? _theme.colorScheme.primary
+                                            : null,
+                                      ),
+                                      style: IconButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 18,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                        side: isFavorite
+                                            ? BorderSide(
+                                                color:
+                                                    _theme.colorScheme.primary,
+                                              )
+                                            : null,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 24),
+
+                              // Description
+                              ...{
+                                "SKU": "1D0MX8SJ",
+                                "LIFE": "6 Months",
+                                "Type": "Original",
+                                "Tags": "Beverages, Dairy & Bakery",
+                              }.entries.map(
+                                (e) => _buildDescription(context, e),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
+
+                      // Reviews & Description
+                      ResponsiveGridCol(
+                        child: Padding(
+                          padding: responsiveValue<EdgeInsetsGeometry>(
+                            context,
+                            xs: const EdgeInsets.only(top: 24),
+                            md: EdgeInsets.symmetric(
+                              horizontal: _padding * 2.5,
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              TabBar(
+                                controller: tabController,
+                                tabAlignment: responsiveValue<TabAlignment>(
+                                  context,
+                                  xs: TabAlignment.fill,
+                                  md: TabAlignment.start,
+                                ),
+                                indicatorSize: TabBarIndicatorSize.tab,
+                                dividerColor: _theme.colorScheme.outline,
+                                indicator: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color: _theme.colorScheme.primary,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                    stops: const [0.30, 0.75],
+                                    colors: [
+                                      _theme.colorScheme.primary.withOpacity(
+                                        0.16,
+                                      ),
+                                      _theme.colorScheme.primary.withOpacity(
+                                        0.05,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                isScrollable: responsiveValue<bool>(
+                                  context,
+                                  xs: false,
+                                  md: true,
+                                ),
+                                tabs: [
+                                  // Tab(text: 'Description'),
+                                  // Tab(text: 'Reviews (25)'),
+                                  Tab(text: lang.description),
+                                  Tab(text: '${lang.reviews} (25)'),
+                                ],
+                                labelColor: _theme.colorScheme.primary,
+                                unselectedLabelColor:
+                                    _theme.colorScheme.onTertiaryContainer,
+                                labelStyle: _theme.textTheme.bodyLarge
+                                    ?.copyWith(fontWeight: FontWeight.w500),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: _padding * 2.5,
+                                ),
+                                child: [
+                                  // Description
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: _padding,
+                                    ),
+                                    child: Text(
+                                      '''Quisque varius diam vel metus mattis, id aliquam diam rhoncus. Proin vitae magna in dui finibus malesuada et at nulla. Morbi elit ex, viverra vitae ante vel, blandit feugiat ligula. Fusce fermentum iaculis nibh, at sodales leo maximus a. Nullam ultricies sodales nunc, in pellentesque lorem mattis quis. Cras imperdiet est in nunc tristique lacinia. Nullam aliquam mauris eu accumsan tincidunt. Suspendisse velit ex, aliquet vel ornare vel, dignissim a tortor.\n\nMorbi ut sapien vitae odio accumsan gravida. Morbi vitae erat auctor, eleifend nunc a, lobortis neque. Praesent aliquam dignissim viverra. Maecenas lacus odio, feugiat eu nunc sit amet, maximus sagittis dolor. Vivamus nisi sapien, elementum sit amet eros sit amet, ultricies cursus ipsum. Sed consequat luctus ligula. Curabitur laoreet rhoncus blandit. Aenean vel diam ut arcu pharetra dignissim ut sed leo. Vivamus faucibus, ipsum in vestibulum vulputate, lorem orci convallis quam, sit amet consequat nulla felis pharetra lacus. Duis semper erat mauris, sed egestas purus commodo vel.''',
+                                      style: _theme.textTheme.bodyLarge
+                                          ?.copyWith(
+                                            color: _theme
+                                                .colorScheme
+                                                .onTertiaryContainer,
+                                          ),
+                                    ),
+                                  ),
+
+                                  // Reviews
+                                  const ReviewList(),
+                                ][tabController.index],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Related Products
+                Padding(
+                  padding: EdgeInsets.all(_padding),
+                  child: Text(
+                    lang.relatedProducts,
+                    //'Related products',
+                    style: _theme.textTheme.bodyLarge?.copyWith(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ],
-              ),
-            ),
-
-            // Related Products
-            Padding(
-              padding: EdgeInsets.all(_padding),
-              child: Text(
-                lang.relatedProducts,
-                //'Related products',
-                style: _theme.textTheme.bodyLarge?.copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
                 ),
-              ),
+                SizedBox(
+                  height: 520,
+                  child: ListView.separated(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: eCommerceMockproducts.length,
+                    itemBuilder: (context, index) {
+                      final _product = eCommerceMockproducts[index];
+                      return AspectRatio(
+                        aspectRatio: 250 / 445,
+                        child: g_comp.GridProductCard(
+                          product: _product,
+                          onTap: () {},
+                          onAddCartTap: () {},
+                          onFavoriteTap: () {},
+                        ),
+                      );
+                    },
+                    separatorBuilder: (c, i) => const SizedBox(width: 16),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(
-              height: 520,
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: eCommerceMockproducts.length,
-                itemBuilder: (context, index) {
-                  final _product = eCommerceMockproducts[index];
-                  return AspectRatio(
-                    aspectRatio: 250 / 445,
-                    child: g_comp.GridProductCard(
-                      product: _product,
-                      onTap: () {},
-                      onAddCartTap: () {},
-                      onFavoriteTap: () {},
-                    ),
-                  );
-                },
-                separatorBuilder: (c, i) => const SizedBox(width: 16),
-              ),
-            )
-          ],
+          ),
         ),
-      );
-    
+      ],
+    );
   }
 
   Widget _buildDescription(BuildContext ctx, MapEntry<String, String?> data) {
@@ -410,9 +431,7 @@ class ReviewList extends StatelessWidget {
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       border: Border(
-                        bottom: BorderSide(
-                          color: _theme.colorScheme.outline,
-                        ),
+                        bottom: BorderSide(color: _theme.colorScheme.outline),
                       ),
                     ),
                     child: Column(
@@ -451,7 +470,7 @@ class ReviewList extends StatelessWidget {
                       ],
                     ),
                   ),
-                )
+                ),
               ],
             );
           },

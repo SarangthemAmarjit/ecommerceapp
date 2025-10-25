@@ -58,6 +58,7 @@ dependencies:
   url_strategy: ^0.3.0
   flutter_localizations:
     sdk: flutter
+  lucide_icons: ^0.257.0
 
 dev_dependencies:
   flutter_test:

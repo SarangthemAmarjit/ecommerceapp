@@ -1,4 +1,7 @@
+import 'package:ecommerceapp/pages/pages/ecommerce_page/product_list/info.dart';
+import 'package:ecommerceapp/pages/view/landing/controller/landing_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
@@ -59,16 +62,16 @@ class _ProductListViewState extends State<ProductListView> {
           ? EdgeInsetsDirectional.fromSTEB(padding, padding, 0, 0)
           : null,
     );
-
+    LandingController lancon = Get.put(LandingController());
     return Column(
       children: [
-        Container(
-          color: const Color.fromARGB(255, 211, 246, 212),
-          width: mqSize.width,
-          height: 60,
+        InfoBar(
+          ontapclosebutton: () {
+            lancon.setcurrentpage('landing');
+          },
         ),
         SizedBox(
-          height: mqSize.height - 60,
+          height: mqSize.height,
           child: Scaffold(
             backgroundColor: const Color.fromARGB(255, 248, 247, 242),
             key: scaffoldKey,
@@ -78,110 +81,114 @@ class _ProductListViewState extends State<ProductListView> {
                     shape: RoundedRectangleBorder(),
                     child: SingleChildScrollView(child: comp.FilterSidebar()),
                   ),
-            body: ResponsiveGridRow(
-              children: [
-                if (isDesktop)
-                  ResponsiveGridCol(
-                    lg: 2,
-                    md: mqSize.width < 992 ? null : 3,
-                    child: Container(
-                      margin: EdgeInsetsDirectional.only(
-                        start: padding / 2.5,
-                        bottom: padding / 2.5,
-                        top: padding / 2.5,
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadiusDirectional.only(
-                          topStart: Radius.circular(4),
-                          bottomStart: Radius.circular(4),
-                          bottomEnd: Radius.circular(4),
+            body: SingleChildScrollView(
+              child: ResponsiveGridRow(
+                children: [
+                  if (isDesktop)
+                    ResponsiveGridCol(
+                      lg: 2,
+                      md: mqSize.width < 992 ? null : 3,
+                      child: Container(
+                        margin: EdgeInsetsDirectional.only(
+                          start: padding / 2.5,
+                          bottom: padding / 2.5,
+                          top: padding / 2.5,
                         ),
-                        border: currentLayout != comp.ProductLayoutType.border
-                            ? null
-                            : Border.all(color: theme.colorScheme.outline),
-                      ),
-                      child: const comp.FilterSidebar(),
-                    ),
-                  ),
-
-                // Product List
-                ResponsiveGridCol(
-                  lg: 10,
-                  md: mqSize.width < 992 ? null : 9,
-                  child: Padding(
-                    padding: isDesktop
-                        ? EdgeInsetsDirectional.fromSTEB(
-                            0,
-                            0,
-                            padding / 2.5,
-                            padding / 2.5,
-                          )
-                        : EdgeInsets.all(padding / 2.5),
-                    child: Column(
-                      children: [
-                        SizedBox(height: padding / 2.5),
-                        comp.Topbar(
-                          scaffoldKey: scaffoldKey,
-                          showDesktop: isDesktop,
-                          selectedLayout: currentLayout,
-                          onLayoutSelect: (value) =>
-                              setState(() => currentLayout = value),
-                          perPage: showPerPage,
-                          onPerpageChange: (v) {
-                            if (currentPage > comp.PaginationWidget.pageCount) {
-                              setState(
-                                () => currentPage =
-                                    comp.PaginationWidget.pageCount,
-                              );
-                            }
-                            productListProv.loadProductsForPage(
-                              currentPage,
-                              v!,
-                            );
-                            setState(() => showPerPage = v);
-                          },
-                          filterId: filterId,
-                          onFilterChange: (v) => setState(() => filterId = v!),
-                        ),
-
-                        // Products
-                        switch (currentLayout) {
-                          comp.ProductLayoutType.grid ||
-                          comp
-                              .ProductLayoutType
-                              .border => layout.ProductsGridLayout(
-                            showBorder:
-                                currentLayout == comp.ProductLayoutType.border,
-                            padding: innerPadding,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadiusDirectional.only(
+                            topStart: Radius.circular(4),
+                            bottomStart: Radius.circular(4),
+                            bottomEnd: Radius.circular(4),
                           ),
-                          comp.ProductLayoutType.tile =>
-                            layout.ProductsListLayout(padding: innerPadding),
-                        },
-                        const SizedBox(height: 24),
+                          border: currentLayout != comp.ProductLayoutType.border
+                              ? null
+                              : Border.all(color: theme.colorScheme.outline),
+                        ),
+                        child: const comp.FilterSidebar(),
+                      ),
+                    ),
 
-                        // Pagination
-                        SizedBox(
-                          width: double.maxFinite,
-                          child: Align(
-                            child: comp.PaginationWidget(
-                              currentPage: currentPage,
-                              totalItem: productListProv.totalProducts,
-                              perPage: showPerPage,
-                              onPagePress: (page) =>
-                                  _handlePageChange(page, productListProv),
-                              onNextPressed: (page) =>
-                                  _handlePageChange(page, productListProv),
-                              onPreviousPressed: (page) =>
-                                  _handlePageChange(page, productListProv),
+                  // Product List
+                  ResponsiveGridCol(
+                    lg: 10,
+                    md: mqSize.width < 992 ? null : 9,
+                    child: Padding(
+                      padding: isDesktop
+                          ? EdgeInsetsDirectional.fromSTEB(
+                              0,
+                              0,
+                              padding / 2.5,
+                              padding / 2.5,
+                            )
+                          : EdgeInsets.all(padding / 2.5),
+                      child: Column(
+                        children: [
+                          SizedBox(height: padding / 2.5),
+                          comp.Topbar(
+                            scaffoldKey: scaffoldKey,
+                            showDesktop: isDesktop,
+                            selectedLayout: currentLayout,
+                            onLayoutSelect: (value) =>
+                                setState(() => currentLayout = value),
+                            perPage: showPerPage,
+                            onPerpageChange: (v) {
+                              if (currentPage >
+                                  comp.PaginationWidget.pageCount) {
+                                setState(
+                                  () => currentPage =
+                                      comp.PaginationWidget.pageCount,
+                                );
+                              }
+                              productListProv.loadProductsForPage(
+                                currentPage,
+                                v!,
+                              );
+                              setState(() => showPerPage = v);
+                            },
+                            filterId: filterId,
+                            onFilterChange: (v) =>
+                                setState(() => filterId = v!),
+                          ),
+
+                          // Products
+                          switch (currentLayout) {
+                            comp.ProductLayoutType.grid ||
+                            comp.ProductLayoutType.border =>
+                              layout.ProductsGridLayout(
+                                showBorder:
+                                    currentLayout ==
+                                    comp.ProductLayoutType.border,
+                                padding: innerPadding,
+                              ),
+                            comp.ProductLayoutType.tile =>
+                              layout.ProductsListLayout(padding: innerPadding),
+                          },
+                          const SizedBox(height: 24),
+
+                          // Pagination
+                          SizedBox(
+                            width: double.maxFinite,
+                            child: Align(
+                              child: comp.PaginationWidget(
+                                currentPage: currentPage,
+                                totalItem: productListProv.totalProducts,
+                                perPage: showPerPage,
+                                onPagePress: (page) =>
+                                    _handlePageChange(page, productListProv),
+                                onNextPressed: (page) =>
+                                    _handlePageChange(page, productListProv),
+                                onPreviousPressed: (page) =>
+                                    _handlePageChange(page, productListProv),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

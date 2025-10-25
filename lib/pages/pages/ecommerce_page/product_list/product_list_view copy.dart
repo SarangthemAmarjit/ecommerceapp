@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
-import 'package:responsive_framework/responsive_framework.dart' as rf;
+
 import '/providers/providers.dart';
 import 'components/_components.dart' as comp;
 import 'layouts/layouts.dart' as layout;
@@ -63,7 +63,7 @@ class _ProductListViewDeskState extends State<ProductListViewDesk> {
     return Column(
       children: [
         Container(
-          color: const Color.fromARGB(255, 211, 246, 212),
+          color: const Color.fromARGB(255, 237, 247, 237),
           width: mqSize.width,
           height: 60,
         ),
@@ -73,29 +73,27 @@ class _ProductListViewDeskState extends State<ProductListViewDesk> {
               ResponsiveGridCol(
                 lg: 2,
                 md: mqSize.width < 992 ? null : 3,
-                child: Expanded(
-                  child: Container(
-                    margin: EdgeInsetsDirectional.only(
-                      start: padding / 2.5,
-                      bottom: padding / 2.5,
-                      top: padding / 2.5,
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadiusDirectional.only(
-                        topStart: Radius.circular(4),
-                        bottomStart: Radius.circular(4),
-                        bottomEnd: Radius.circular(4),
-                      ),
-                      border: currentLayout != comp.ProductLayoutType.border
-                          ? null
-                          : Border.all(color: theme.colorScheme.outline),
-                    ),
-                    child: const comp.FilterSidebar(),
+                child: Container(
+                  margin: EdgeInsetsDirectional.only(
+                    start: padding / 2.5,
+                    bottom: padding / 2.5,
+                    top: padding / 2.5,
                   ),
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadiusDirectional.only(
+                      topStart: Radius.circular(4),
+                      bottomStart: Radius.circular(4),
+                      bottomEnd: Radius.circular(4),
+                    ),
+                    border: currentLayout != comp.ProductLayoutType.border
+                        ? null
+                        : Border.all(color: theme.colorScheme.outline),
+                  ),
+                  child: const comp.FilterSidebar(),
                 ),
               ),
-        
+
             // Product List
             ResponsiveGridCol(
               lg: 10,
@@ -122,8 +120,7 @@ class _ProductListViewDeskState extends State<ProductListViewDesk> {
                       onPerpageChange: (v) {
                         if (currentPage > comp.PaginationWidget.pageCount) {
                           setState(
-                            () =>
-                                currentPage = comp.PaginationWidget.pageCount,
+                            () => currentPage = comp.PaginationWidget.pageCount,
                           );
                         }
                         productListProv.loadProductsForPage(currentPage, v!);
@@ -132,7 +129,7 @@ class _ProductListViewDeskState extends State<ProductListViewDesk> {
                       filterId: filterId,
                       onFilterChange: (v) => setState(() => filterId = v!),
                     ),
-        
+
                     // Products
                     switch (currentLayout) {
                       comp.ProductLayoutType.grid ||
@@ -142,11 +139,12 @@ class _ProductListViewDeskState extends State<ProductListViewDesk> {
                               currentLayout == comp.ProductLayoutType.border,
                           padding: innerPadding,
                         ),
-                      comp.ProductLayoutType.tile =>
-                        layout.ProductsListLayout(padding: innerPadding),
+                      comp.ProductLayoutType.tile => layout.ProductsListLayout(
+                        padding: innerPadding,
+                      ),
                     },
                     const SizedBox(height: 24),
-        
+
                     // Pagination
                     SizedBox(
                       width: double.maxFinite,

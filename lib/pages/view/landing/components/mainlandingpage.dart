@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:ecommerceapp/pages/pages/ecommerce_page/product_details/product_details_view.dart';
-import 'package:ecommerceapp/pages/pages/ecommerce_page/product_list/product_list_view%20copy.dart';
 import 'package:ecommerceapp/pages/pages/ecommerce_page/product_list/product_list_view.dart';
 import 'package:ecommerceapp/pages/view/landing/components/DealPage.dart';
 import 'package:ecommerceapp/pages/view/landing/components/Whatsnewpage.dart';
@@ -33,12 +32,16 @@ class _MainLandingpageState extends State<MainLandingpage> {
   }
 
   Widget getPage(String title) {
-      final isDesktop = MediaQuery.of(context).size.width >= 992;
+    final isDesktop = MediaQuery.of(context).size.width >= 992;
     switch (title) {
       case 'landing':
         return const DesktopLandingPage();
       case 'productlist':
-        return isDesktop ? const ProductListViewDesk() : const ProductListView();
+        return
+        // isDesktop
+        //     ? const ProductListViewDesk()
+        //     :
+        const ProductListView();
 
       case 'productdetails':
         return const ProductDetailsView();
