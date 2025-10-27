@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:ecommerceapp/pages/pages/ecommerce_page/cart/componend/product_list.dart';
 import 'package:flutter/material.dart';
 
 bool isdemo = false;
@@ -31,6 +32,105 @@ final List<Map<String, dynamic>> demoadmins = [
     'name': 'Yumnam Nelson, MCS',
     'designation': 'Joint Secretary (Finance)',
   },
+];
+
+final List<Product> allcartproduct = [
+  Product(
+    id: 1,
+    image: 'assets/images/static_images/product_images/product_image_15.jpeg',
+    name: 'All Natural Italian-Style Chicken Meatballs',
+    price: 5.50,
+    quantity: 2,
+    subtotal: 11.00,
+  ),
+  Product(
+    id: 2,
+    image: 'assets/images/static_images/product_images/product_image_16.png',
+    name: 'Apple iPhone 11 64GB Yellow Fully Unlocked',
+    price: 599.00,
+    quantity: 1,
+    subtotal: 599.00,
+  ),
+  Product(
+    id: 3,
+    image: 'assets/images/static_images/product_images/product_image_17.png',
+    name: 'Organic Sweet Lime / Mosambi',
+    price: 20.00,
+    quantity: 1,
+    subtotal: 20.00,
+  ),
+  Product(
+    id: 4,
+    image: 'assets/images/static_images/product_images/product_image_18.jpeg',
+    name: 'Pepperidge Farm Farmhouse Hearty White Bread',
+    price: 45.00,
+    quantity: 1,
+    subtotal: 45.00,
+  ),
+  Product(
+    id: 5,
+    image: 'assets/images/static_images/product_images/product_image_19.png',
+    name: 'Organic Green Seedless Grapes',
+    price: 60.00,
+    quantity: 1,
+    subtotal: 60.00,
+  ),
+  Product(
+    id: 6,
+    image: 'assets/images/static_images/product_images/product_image_20.png',
+    name: 'Lemon Cream Crunch Cookies',
+    price: 35.00,
+    quantity: 2,
+    subtotal: 70.00,
+  ),
+  Product(
+    id: 7,
+    image: 'assets/images/static_images/product_images/product_image_21.png',
+    name: 'Best Bluetooth Headphone',
+    price: 49.50,
+    quantity: 2,
+    subtotal: 99.00,
+  ),
+  Product(
+    id: 8,
+    image: 'assets/images/static_images/product_images/product_image_22.png',
+    name: 'Apple TV HD 32GB (2nd Generation)',
+    price: 149.00,
+    quantity: 1,
+    subtotal: 149.00,
+  ),
+  Product(
+    id: 9,
+    image: 'assets/images/static_images/product_images/product_image_23.jpeg',
+    name: 'Premium Cavendish Banana',
+    price: 20.00,
+    quantity: 1,
+    subtotal: 20.00,
+  ),
+  Product(
+    id: 10,
+    image: 'assets/images/static_images/product_images/product_image_24.png',
+    name: 'All Natural Italian-Style Chicken Meatballs',
+    price: 5.50,
+    quantity: 2,
+    subtotal: 11.00,
+  ),
+  Product(
+    id: 11,
+    image: 'assets/images/static_images/product_images/product_image_22.png',
+    name: 'Apple TV HD 32GB (2nd Generation)',
+    price: 149.00,
+    quantity: 1,
+    subtotal: 149.00,
+  ),
+  Product(
+    id: 12,
+    image: 'assets/images/static_images/product_images/product_image_24.png',
+    name: 'All Natural Italian-Style Chicken Meatballs',
+    price: 5.50,
+    quantity: 2,
+    subtotal: 11.00,
+  ),
 ];
 
 final List<Map<String, dynamic>> products = [
@@ -112,34 +212,28 @@ final List<Map<String, dynamic>> categories = [
   {
     'title': 'T-Shirts',
     'color': const Color(0xFF4FA9AB).withOpacity(0.3),
-    'image':
-        'assets/images/static_images/productcategory/tshirts.webp',
+    'image': 'assets/images/static_images/productcategory/tshirts.webp',
   },
   {
     'title': 'Shoes',
     'color': const Color(0xFFFF9066).withOpacity(0.3),
-    'image':
-        'assets/images/static_images/productcategory/shoes.webp',
+    'image': 'assets/images/static_images/productcategory/shoes.webp',
   },
   {
     'title': 'Woman Bag',
     'color': const Color(0xFF8B1538).withOpacity(0.3),
-    'image':
-        'assets/images/static_images/productcategory/womanbags.webp',
+    'image': 'assets/images/static_images/productcategory/womanbags.webp',
   },
   {
     'title': 'Fresh Food',
     'color': const Color(0xFF2DB224).withOpacity(0.3),
-    'image':
-        'assets/images/static_images/productcategory/freshfood.webp',
+    'image': 'assets/images/static_images/productcategory/freshfood.webp',
   },
   {
     'title': 'Electronics',
     'color': const Color(0xFFFFCDD2).withOpacity(0.3),
-    'image':
-        'assets/images/static_images/productcategory/electronics.webp',
+    'image': 'assets/images/static_images/productcategory/electronics.webp',
   },
-
 ];
 
 final List<Map<String, dynamic>> departmentStaff = [

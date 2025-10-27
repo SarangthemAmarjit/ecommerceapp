@@ -1,4 +1,5 @@
 import 'package:ecommerceapp/pages/view/landing/controller/landing_controller.dart';
+import 'package:ecommerceapp/pages/view/landing/controller/productcontroller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ class ProductsGridLayout extends StatelessWidget {
     final mqSize = MediaQuery.sizeOf(context);
     final theme = Theme.of(context);
     LandingController lancon = Get.put(LandingController());
+    Productcontroller procon = Get.put(Productcontroller());
     return Consumer<ECommerceMockProductsNotifier>(
       builder: (context, prov, child) {
         return GridView.builder(
@@ -48,7 +50,9 @@ class ProductsGridLayout extends StatelessWidget {
                 showHoverEffect: !showBorder,
                 isFavorite: prov.favoriteProducts.contains(product.id),
                 onFavoriteTap: () => prov.addToFav(product.id),
-                onAddCartTap: () {},
+                onAddCartTap: () {
+                  procon.addToCart(product.id);
+                },
                 onTap: () => lancon.setcurrentpage('productdetails'),
               ),
             );

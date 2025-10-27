@@ -1,12 +1,14 @@
 import 'dart:developer';
 
 import 'package:ecommerceapp/core/helpers/fuctions/_get_image.dart';
+import 'package:ecommerceapp/pages/pages/ecommerce_page/cart/cart_view.dart';
 import 'package:ecommerceapp/pages/pages/ecommerce_page/product_details/product_details_view.dart';
 import 'package:ecommerceapp/pages/pages/ecommerce_page/product_list/product_list_view.dart';
 import 'package:ecommerceapp/pages/view/landing/components/DealPage.dart';
 import 'package:ecommerceapp/pages/view/landing/components/Whatsnewpage.dart';
 import 'package:ecommerceapp/pages/view/landing/components/deliverypage.dart';
 import 'package:ecommerceapp/pages/view/landing/controller/landing_controller.dart';
+import 'package:ecommerceapp/pages/view/landing/controller/productcontroller.dart';
 import 'package:ecommerceapp/pages/view/landing/desktoplanding.dart';
 import 'package:ecommerceapp/pages/view/landing/widget/navbar.dart';
 import 'package:ecommerceapp/providers/_ecommerce_product_list_provider.dart';
@@ -28,8 +30,6 @@ class _MainLandingpageState extends State<MainLandingpage> {
 
   final TextEditingController searchController = TextEditingController();
 
-
-
   Widget getPage(String title) {
     final isDesktop = MediaQuery.of(context).size.width >= 992;
     switch (title) {
@@ -41,6 +41,8 @@ class _MainLandingpageState extends State<MainLandingpage> {
         //     ? const ProductListViewDesk()
         //     :
         const ProductListView();
+      case 'cartpage':
+        return const CartView();
 
       case 'productdetails':
         return const ProductDetailsView();
@@ -271,11 +273,11 @@ class _MainLandingpageState extends State<MainLandingpage> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color:Colors.teal.shade50,
+                      color: Colors.teal.shade50,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: AnimageWidget(imagePath: icon),
-        
+
                     // Image.asset(icon, width: 32, height: 32),
                   ),
                   const SizedBox(width: 15),
@@ -308,31 +310,42 @@ class _MainLandingpageState extends State<MainLandingpage> {
             ),
           ),
         );
-      }
+      },
     );
   }
 
   Widget _buildIconButton(IconData icon, String label) {
     LandingController lancon = Get.put(LandingController());
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () => lancon.setcurrentpage(label),
-        child: Row(
-          children: [
-            Icon(icon, size: 24, color: Colors.grey.shade800),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey.shade800,
-              ),
+    Productcontroller pageController = Get.put(Productcontroller());
+    return GetBuilder<Productcontroller>(
+      builder: (_) {
+        return MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: () => lancon.setcurrentpage('cartpage'),
+            child: Row(
+              children: [
+                Badge(
+                  label: Text(
+                    pageController.cartproducts.length.toString(),
+                    style: const TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                  child: Icon(icon, size: 24, color: Colors.grey.shade800),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

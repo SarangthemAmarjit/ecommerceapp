@@ -3,8 +3,10 @@ import 'dart:math' as math;
 import 'package:ecommerceapp/pages/view/landing/components/footer.dart';
 import 'package:ecommerceapp/pages/view/landing/controller/landing_controller.dart';
 import 'package:ecommerceapp/pages/view/landing/landing2.dart';
+import 'package:ecommerceapp/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class DesktopLandingPage extends StatelessWidget {
   const DesktopLandingPage({super.key});
@@ -45,87 +47,94 @@ class DesktopLandingPage extends StatelessWidget {
     final buttonRadius = isMobile ? 10.0 : 15.0;
     final buttonFontSize = (width * 0.016).clamp(12.0, 16.0).toDouble();
 
-    return Container(
-      width: double.infinity,
-      height: heroHeight,
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage('assets/images/banner.webp'),
-        ),
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: leftPadding,
-          top: topPadding,
-          right: isMobile ? 20 : 40,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title
-            Text(
-              'Shopping And\nDepartment Store.',
-              style: TextStyle(
-                fontSize: titleFontSize,
-                letterSpacing: 2,
-                fontWeight: FontWeight.bold,
-                color: const Color.fromARGB(255, 0, 61, 41),
-                height: 1.1,
-              ),
+    return Consumer<ECommerceMockProductsNotifier>(
+      builder: (context, productNotifier, child) {
+        return Container(
+          width: double.infinity,
+          height: heroHeight,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage('assets/images/banner.webp'),
             ),
-
-            SizedBox(height: isMobile ? 16 : 30),
-
-            // Subtitle / description
-            SizedBox(
-              width: subtitleMaxWidth,
-              child: Text(
-                'Shopping is a bit of a relaxing hobby for me, which\nis sometimes troubling for the bank balance.',
-                style: TextStyle(
-                  fontSize: subtitleFontSize,
-                  color: Colors.grey.shade800,
-                  height: 1.6,
-                ),
-              ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: leftPadding,
+              top: topPadding,
+              right: isMobile ? 20 : 40,
             ),
-
-            SizedBox(height: isMobile ? 20 : 40),
-
-            // CTA Button
-            MouseRegion(
-              cursor: SystemMouseCursors.click,
-              child: GestureDetector(
-                onTap: () => lancon.setcurrentpage('productlist'),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(buttonRadius),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title
+                Text(
+                  'Shopping And\nDepartment Store.',
+                  style: TextStyle(
+                    fontSize: titleFontSize,
+                    letterSpacing: 2,
+                    fontWeight: FontWeight.bold,
+                    color: const Color.fromARGB(255, 0, 61, 41),
+                    height: 1.1,
                   ),
-                  elevation: 8,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: buttonHorizontalPadding,
-                      vertical: buttonVerticalPadding,
+                ),
+
+                SizedBox(height: isMobile ? 16 : 30),
+
+                // Subtitle / description
+                SizedBox(
+                  width: subtitleMaxWidth,
+                  child: Text(
+                    'Shopping is a bit of a relaxing hobby for me, which\nis sometimes troubling for the bank balance.',
+                    style: TextStyle(
+                      fontSize: subtitleFontSize,
+                      color: Colors.grey.shade800,
+                      height: 1.6,
                     ),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 0, 61, 41),
-                      borderRadius: BorderRadius.circular(buttonRadius),
-                    ),
-                    child: Text(
-                      'Get Started',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: buttonFontSize,
-                        fontWeight: FontWeight.w600,
+                  ),
+                ),
+
+                SizedBox(height: isMobile ? 20 : 40),
+
+                // CTA Button
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () {
+                      productNotifier.setSelectedCategory('All Category');
+                      lancon.setcurrentpage('productlist');
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(buttonRadius),
+                      ),
+                      elevation: 8,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: buttonHorizontalPadding,
+                          vertical: buttonVerticalPadding,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 0, 61, 41),
+                          borderRadius: BorderRadius.circular(buttonRadius),
+                        ),
+                        child: Text(
+                          'Get Started',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: buttonFontSize,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

@@ -10,14 +10,14 @@ class LandingController extends GetxController {
   bool get isSearching => _issearching;
   String get helpcurrentpage => _helpcurrentpage;
   String _currentpage = 'landing';
+  String _recentpage = '';
+  String get recentpage => _recentpage;
   String _currentmenu = 'home';
   String get currentmenu => _currentmenu;
   String? pendingScrollTarget;
   int _selectedmenuindex = 0;
-    bool _showCategoryDropdown = false;
+  bool _showCategoryDropdown = false;
   bool get showCategoryDropdown => _showCategoryDropdown;
-
-
 
   int _selectedadminpageindex = 0;
   String _admincurrentpage = 'dashboard';
@@ -43,7 +43,7 @@ class LandingController extends GetxController {
     update(); // triggers widget rebuild
   }
 
-    void toggleCategoryDropdown() {
+  void toggleCategoryDropdown() {
     _showCategoryDropdown = !_showCategoryDropdown;
     update();
   }
@@ -99,7 +99,7 @@ class LandingController extends GetxController {
 
   void setcurrentpage(String page) {
     log("page : " + page);
-    // _istermpage = false;
+    _recentpage = _currentpage;
     _currentpage = page;
     update();
     resetScroll();

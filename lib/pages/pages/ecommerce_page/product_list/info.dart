@@ -72,7 +72,7 @@ class InfoBar extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: IconButton(
               icon: const Icon(Icons.close, size: 22, color: Colors.black54),
-              tooltip: 'Close Product Page',
+
               onPressed: ontapclosebutton,
             ),
           ),

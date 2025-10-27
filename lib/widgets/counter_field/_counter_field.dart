@@ -11,14 +11,14 @@ class CounterField extends StatefulWidget {
 }
 
 class _CounterFieldState extends State<CounterField> {
-  int count = 0;
+  int count = 1;
   late final _newController = widget.controller ?? TextEditingController();
 
   final _iconConstraint = BoxConstraints.tight(const Size.square(44));
   @override
   void initState() {
     super.initState();
-    widget.controller?.text = count.toString();
+    _newController.text = count.toString();
   }
 
   @override
@@ -96,10 +96,7 @@ class _ActionButton extends StatelessWidget {
       onPressed: onPressed,
       style: IconButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: borderRadius),
-        side: BorderSide(
-          width: 1.25,
-          color: _theme.colorScheme.outline,
-        ),
+        side: BorderSide(width: 1.25, color: _theme.colorScheme.outline),
       ),
       icon: icon,
     );
