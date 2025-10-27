@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:ecommerceapp/core/helpers/fuctions/_get_image.dart';
 import 'package:ecommerceapp/pages/pages/ecommerce_page/product_details/product_details_view.dart';
 import 'package:ecommerceapp/pages/pages/ecommerce_page/product_list/product_list_view.dart';
 import 'package:ecommerceapp/pages/view/landing/components/DealPage.dart';
@@ -8,8 +9,12 @@ import 'package:ecommerceapp/pages/view/landing/components/deliverypage.dart';
 import 'package:ecommerceapp/pages/view/landing/controller/landing_controller.dart';
 import 'package:ecommerceapp/pages/view/landing/desktoplanding.dart';
 import 'package:ecommerceapp/pages/view/landing/widget/navbar.dart';
+import 'package:ecommerceapp/providers/_ecommerce_product_list_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+
+import '/core/generated/l10n.dart' as l;
 
 class MainLandingpage extends StatefulWidget {
   const MainLandingpage({super.key});
@@ -23,13 +28,7 @@ class _MainLandingpageState extends State<MainLandingpage> {
 
   final TextEditingController searchController = TextEditingController();
 
-  bool showCategoryDropdown = false;
 
-  void toggleCategoryDropdown() {
-    setState(() {
-      showCategoryDropdown = !showCategoryDropdown;
-    });
-  }
 
   Widget getPage(String title) {
     final isDesktop = MediaQuery.of(context).size.width >= 992;
@@ -101,10 +100,10 @@ class _MainLandingpageState extends State<MainLandingpage> {
             title: title,
             isSelected: isSelected,
             hasDropdown: hasDropdown,
-            showCategoryDropdown: showCategoryDropdown,
+            showCategoryDropdown: lancon.showCategoryDropdown,
             onTap: () {
               if (hasDropdown && title == 'Category') {
-                toggleCategoryDropdown();
+                lancon.toggleCategoryDropdown();
               } else {
                 lancon.setcurrentpage(title);
               }
@@ -115,41 +114,52 @@ class _MainLandingpageState extends State<MainLandingpage> {
     );
   }
 
-  Widget _buildCategoryDropdown() {
+  Widget _buildCategoryDropdown(LandingController lancon) {
     final categories = [
       {
-        'icon': Icons.chair_outlined,
-        'name': 'Furniture',
+        'icon':
+            "assets/images/widget_images/dashboard_overview_icon/ecommerce_admin_icons/category_icons/all_category.svg",
+        'name': l.S.current.allCategory,
         'items': '240 Item Available',
         'color': Colors.grey.shade700,
       },
       {
-        'icon': Icons.shopping_bag_outlined,
-        'name': 'Hand Bag',
+        'icon':
+            "assets/images/widget_images/dashboard_overview_icon/ecommerce_admin_icons/category_icons/t_shirts.svg",
+        'name': l.S.current.tShirts,
+
         'items': '240 Item Available',
         'color': Colors.pink.shade300,
       },
       {
-        'icon': Icons.sports_soccer_outlined,
-        'name': 'Shoe',
+        'icon':
+            "assets/images/widget_images/dashboard_overview_icon/ecommerce_admin_icons/category_icons/shoes.svg",
+        'name': l.S.current.shoes,
+
         'items': '240 Item Available',
         'color': Colors.orange.shade200,
       },
       {
-        'icon': Icons.headphones_outlined,
-        'name': 'Headphone',
+        'icon':
+            "assets/images/widget_images/dashboard_overview_icon/ecommerce_admin_icons/category_icons/woman_bag.svg",
+        'name': l.S.current.womanBag,
+
         'items': '240 Item Available',
         'color': Colors.grey.shade700,
       },
       {
-        'icon': Icons.laptop_outlined,
-        'name': 'Laptop',
+        'icon':
+            "assets/images/widget_images/dashboard_overview_icon/ecommerce_admin_icons/category_icons/fresh_food.svg",
+        'name': l.S.current.freshFood,
+
         'items': '240 Item Available',
         'color': Colors.pink.shade100,
       },
       {
-        'icon': Icons.book_outlined,
-        'name': 'Book',
+        'icon':
+            "assets/images/widget_images/dashboard_overview_icon/ecommerce_admin_icons/category_icons/computer.svg",
+        'name': l.S.current.electronics,
+
         'items': '240 Item Available',
         'color': Colors.orange.shade300,
       },
@@ -157,9 +167,7 @@ class _MainLandingpageState extends State<MainLandingpage> {
     final double width = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: () {
-        setState(() {
-          showCategoryDropdown = false;
-        });
+        lancon.toggleCategoryDropdown();
       },
       child: Container(
         color: Colors.transparent,
@@ -214,10 +222,11 @@ class _MainLandingpageState extends State<MainLandingpage> {
                           itemBuilder: (context, index) {
                             final category = categories[index];
                             return _buildCategoryItem(
-                              category['icon'] as IconData,
+                              category['icon'] as String,
                               category['name'] as String,
                               category['items'] as String,
                               category['color'] as Color,
+                              lancon,
                             );
                           },
                         ),
@@ -234,65 +243,72 @@ class _MainLandingpageState extends State<MainLandingpage> {
   }
 
   Widget _buildCategoryItem(
-    IconData icon,
+    String icon,
     String name,
     String items,
     Color iconColor,
+    LandingController lancon,
   ) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            showCategoryDropdown = false;
-          });
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade200),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(icon, size: 32, color: iconColor),
+    return Consumer<ECommerceMockProductsNotifier>(
+      builder: (context, ec, child) {
+        return MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: () {
+              lancon.toggleCategoryDropdown();
+              ec.setSelectedCategory(name);
+              lancon.setcurrentpage('productlist');
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade200),
               ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      name,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color:Colors.teal.shade50,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      items,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
-                      ),
+                    child: AnimageWidget(imagePath: icon),
+        
+                    // Image.asset(icon, width: 32, height: 32),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          name,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          items,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      }
     );
   }
 
@@ -390,14 +406,10 @@ class _MainLandingpageState extends State<MainLandingpage> {
                 ),
               const Spacer(),
               // Search Bar
-              Container(
+              SizedBox(
                 width: 300,
                 height: 45,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
+
                 child: TextField(
                   controller: searchController,
                   decoration: InputDecoration(
@@ -434,16 +446,7 @@ class _MainLandingpageState extends State<MainLandingpage> {
                   // log('login');
                   // Get.toNamed(AppRoutes.login);
                 },
-                style: OutlinedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
-                  side: const BorderSide(color: Colors.blue),
-                ),
+
                 child: const Text(
                   "Login",
                   style: TextStyle(color: Colors.blue),
@@ -492,7 +495,7 @@ class _MainLandingpageState extends State<MainLandingpage> {
                   ),
                 ],
               ),
-              if (showCategoryDropdown) _buildCategoryDropdown(),
+              if (landcon.showCategoryDropdown) _buildCategoryDropdown(landcon),
             ],
           );
         },

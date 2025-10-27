@@ -5,7 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 class InfoBar extends StatelessWidget {
   final void Function()? ontapclosebutton;
-  InfoBar({super.key, this.ontapclosebutton});
+  const InfoBar({super.key, this.ontapclosebutton});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class InfoBar extends StatelessWidget {
             children: [
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Container(
+                child: SizedBox(
                   width: mqSize.width - 80,
 
                   child: Row(

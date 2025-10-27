@@ -1,5 +1,10 @@
 import 'package:ecommerceapp/config/constants.dart';
+import 'package:ecommerceapp/pages/view/landing/controller/landing_controller.dart';
+import 'package:ecommerceapp/providers/_ecommerce_product_list_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class HomePage22 extends StatelessWidget {
@@ -7,230 +12,269 @@ class HomePage22 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 40),
-
-        // Shop Our Top Categories
-        _buildSectionHeader('Shop Our Top Categories'),
-        const SizedBox(height: 20),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-          height: 200, // Adjust height as needed
-          child: GridView.builder(
-            physics:
-                const NeverScrollableScrollPhysics(), // optional (disable scroll)
-            shrinkWrap: true,
-            itemCount: categories.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 6, // Number of columns
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-            ),
-            itemBuilder: (context, index) {
-              return _buildCategoryCard(
-                title: categories[index]['title'],
-                color: categories[index]['color'],
-                imageUrl: categories[index]['image'],
-              );
-            },
-          ),
-        ),
-
-        const SizedBox(height: 50),
-
-        // Cash Back Banner
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 40),
-          height: 350,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            image: const DecorationImage(
-              image: NetworkImage(
-                'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200',
-              ),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              gradient: LinearGradient(
-                colors: [
-                  Colors.yellow[700]!.withOpacity(0.9),
-                  Colors.transparent,
-                  Colors.teal[800]!.withOpacity(0.9),
-                ],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.all(60),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Get 5% Cash\nBack On \$200',
-                          style: TextStyle(
-                            fontSize: 38,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            height: 1.2,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'Shop Now for exclusive deals and\nget cash back on your purchases.',
-                          style: TextStyle(fontSize: 14, color: Colors.white),
-                        ),
-                        const SizedBox(height: 28),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: const Color(0xFF006D5B),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 36,
-                              vertical: 16,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            elevation: 0,
-                          ),
-                          child: const Text(
-                            'Shop Now',
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      ],
+    LandingController lancon = Get.put(LandingController());
+    return Consumer<ECommerceMockProductsNotifier>(
+      builder: (context, productNotifier, child) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 40),
+        
+            // Shop Our Top Categories
+            _buildSectionHeader('Shop Our Top Categories'),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final maxWidth = constraints.maxWidth;
+        
+                  int crossAxisCount = 6;
+                  if (maxWidth < 1400) crossAxisCount = 5;
+                  if (maxWidth < 1100) crossAxisCount = 4;
+                  if (maxWidth < 900) crossAxisCount = 3;
+                  if (maxWidth < 600) crossAxisCount = 2;
+                  if (maxWidth < 400) crossAxisCount = 1;
+        
+                  // calculate a sensible childAspectRatio so cards keep consistent height
+                  final spacing = 16.0 * (crossAxisCount - 1);
+                  final tileWidth = (maxWidth - spacing) / crossAxisCount;
+                  const tileHeight = 210;
+                  final childAspectRatio = tileWidth / tileHeight;
+        
+                  return GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: categories.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: childAspectRatio,
                     ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 50),
-
-        // Today's Best Deals For You (Second)
-        _buildSectionHeader('Today\'s Best Deals For You!'),
-        const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              int crossAxisCount = 4;
-
-              if (constraints.maxWidth < 1100) {
-                crossAxisCount = 3;
-              }
-              if (constraints.maxWidth < 800) {
-                crossAxisCount = 2;
-              }
-              if (constraints.maxWidth < 500) {
-                crossAxisCount = 1;
-              }
-
-              return GridView.builder(
-                itemCount: products.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 0.85, // Adjust card height proportion
-                ),
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final product = products[index];
-                  return _buildSmallProductCard(
-                    name: product['name'],
-                    price: product['price'],
-                    imageUrl: product['imageUrl'],
-                    description: product['description'],
-                    rating: product['rating'],
-                    reviews: product['reviews'],
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          productNotifier.setSelectedCategory(  categories[index]['title']);
+                          lancon.setcurrentpage('productlist');
+                        },
+                        child: _buildCategoryCard(
+                          title: categories[index]['title'],
+                          color: categories[index]['color'],
+                          imageUrl: categories[index]['image'],
+                        ),
+                      );
+                    },
                   );
                 },
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 50),
-
-        // // Trending Products For You
-        _buildSectionHeader('Trending Products For You'),
-        const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: Row(
-            children: [
-              Expanded(
-                child: _buildLargeBanner(
-                  'Furniture Village',
-                  'Exclusive Collection',
-                  'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600',
+              ),
+            ),
+        
+            const SizedBox(height: 50),
+        
+            // Cash Back Banner
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 40),
+              height: 350,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                image: const DecorationImage(
+                  image: NetworkImage(
+                    'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200',
+                  ),
+                  fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: _buildLargeBanner(
-                  'Fashion World',
-                  'New Season Styles',
-                  'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600',
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.yellow[700]!.withOpacity(0.9),
+                      Colors.transparent,
+                      Colors.teal[800]!.withOpacity(0.9),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.all(60),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Get 5% Cash\nBack On \$200',
+                              style: TextStyle(
+                                fontSize: 38,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                height: 1.2,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Shop Now for exclusive deals and\nget cash back on your purchases.',
+                              style: TextStyle(fontSize: 14, color: Colors.white),
+                            ),
+                            const SizedBox(height: 28),
+                            ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: const Color(0xFF006D5B),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 36,
+                                  vertical: 16,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                elevation: 0,
+                              ),
+                              child: const Text(
+                                'Shop Now',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 50),
-
-        // // Services To Help You Shop
-        _buildSectionHeader('Services To Help You Shop'),
-        const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: Row(
-            children: [
-              Expanded(
-                child: _buildServiceCard(
-                  'Frequently Asked Questions',
-                  'Get answers instantly',
-                  const Color(0xFFFFEBEE),
-                  'https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=400',
-                ),
+            ),
+            const SizedBox(height: 50),
+        
+            // Today's Best Deals For You (Second)
+            _buildSectionHeader('Today\'s Best Deals For You!'),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final maxWidth = constraints.maxWidth;
+        
+                  int crossAxisCount = 4;
+                  if (maxWidth < 1400) crossAxisCount = 4;
+                  if (maxWidth < 1100) crossAxisCount = 3;
+                  if (maxWidth < 900) crossAxisCount = 2;
+                  if (maxWidth < 600) crossAxisCount = 1;
+        
+                  // calculate a sensible childAspectRatio so cards keep consistent height
+                  final spacing = 16.0 * (crossAxisCount - 1);
+                  final tileWidth = (maxWidth - spacing) / crossAxisCount;
+                  const tileHeight = 360;
+                  final childAspectRatio = tileWidth / tileHeight;
+        
+                  // ensure card doesn't exceed its internal preferred width (260)
+                  double cardMaxWidth = tileWidth < 260 ? tileWidth : 260;
+        
+                  return GridView.builder(
+                    itemCount: products.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: childAspectRatio,
+                    ),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final product = products[index];
+                      return Center(
+                        child: SizedBox(
+                          width: cardMaxWidth,
+                          child: _buildSmallProductCard(
+                            name: product['name'],
+                            price: product['price'],
+                            imageUrl: product['imageUrl'],
+                            description: product['description'],
+                            rating: product['rating'],
+                            reviews: product['reviews'],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: _buildServiceCard(
-                  'Online Payment',
-                  'Secure transactions',
-                  const Color(0xFFE8F5E9),
-                  'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400',
-                ),
+            ),
+            const SizedBox(height: 50),
+        
+            // // Trending Products For You
+            _buildSectionHeader('Trending Products For You'),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _buildLargeBanner(
+                      'Furniture Village',
+                      'Exclusive Collection',
+                      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600',
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: _buildLargeBanner(
+                      'Fashion World',
+                      'New Season Styles',
+                      'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600',
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: _buildServiceCard(
-                  'Home Delivery',
-                  'Fast & reliable',
-                  const Color(0xFFFFF9C4),
-                  'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=400',
-                ),
+            ),
+            const SizedBox(height: 50),
+        
+            // // Services To Help You Shop
+            _buildSectionHeader('Services To Help You Shop'),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _buildServiceCard(
+                      'Frequently Asked Questions',
+                      'Get answers instantly',
+                      const Color(0xFFFFEBEE),
+                      'https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=400',
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: _buildServiceCard(
+                      'Online Payment',
+                      'Secure transactions',
+                      const Color(0xFFE8F5E9),
+                      'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400',
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: _buildServiceCard(
+                      'Home Delivery',
+                      'Fast & reliable',
+                      const Color(0xFFFFF9C4),
+                      'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=400',
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 60),
-      ],
+            ),
+            const SizedBox(height: 60),
+          ],
+        );
+      }
     );
   }
 
@@ -278,44 +322,55 @@ class HomePage22 extends StatelessWidget {
           color: color,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
-                  color: maincolor,
-                  letterSpacing: 2,
-                ),
-              ),
-              const SizedBox(height: 12),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(6),
-                child: Image.network(
-                  imageUrl,
-                  height: 90,
-                  width: 90,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      height: 90,
-                      width: 90,
-                      color: Colors.white.withOpacity(0.5),
-                      child: const Icon(
-                        Icons.image,
-                        size: 40,
-                        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Image.asset(
+                        imageUrl,
+
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: 90,
+                            width: 90,
+                            color: Colors.white.withOpacity(0.5),
+                            child: const Icon(
+                              Icons.image,
+                              size: 40,
+                              color: Colors.white,
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                      // Dark overlay to give image a darker, semi-transparent look
+                      Positioned.fill(
+                        child: Container(color: Colors.black.withOpacity(0.2)),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: Colors.white,
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

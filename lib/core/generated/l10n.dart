@@ -10047,6 +10047,15 @@ class S {
     );
   }
 
+  /// `Electronics`
+  String get electronics {
+    return Intl.message(
+      'Electronics',
+      name: 'electronics',
+      desc: '',
+      args: [],
+    );
+  }
   /// `Sort by Popularity`
   String get sortByPopularity {
     return Intl.message(

@@ -1,5 +1,7 @@
 // 🐦 Flutter imports:
+import 'package:ecommerceapp/providers/_ecommerce_product_list_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '/core/generated/l10n.dart' as l;
 // 🌎 Project imports:
@@ -23,13 +25,13 @@ class _FilterSidebarState extends State<FilterSidebar> {
       // name: "All Category",
       name: l.S.current.allCategory,
     ),
-    CategoryModel(
-      id: 2,
-      imagePath:
-          "assets/images/widget_images/dashboard_overview_icon/ecommerce_admin_icons/category_icons/woman_dress.svg",
-      //name: "Woman Dress",
-      name: l.S.current.womanDress,
-    ),
+    // CategoryModel(
+    //   id: 2,
+    //   imagePath:
+    //       "assets/images/widget_images/dashboard_overview_icon/ecommerce_admin_icons/category_icons/woman_dress.svg",
+    //   //name: "Woman Dress",
+    //   name: l.S.current.womanDress,
+    // ),
     CategoryModel(
       id: 3,
       imagePath:
@@ -44,13 +46,13 @@ class _FilterSidebarState extends State<FilterSidebar> {
       //name: "Shoes",
       name: l.S.current.shoes,
     ),
-    CategoryModel(
-      id: 5,
-      imagePath:
-          "assets/images/widget_images/dashboard_overview_icon/ecommerce_admin_icons/category_icons/sunglass.svg",
-      //name: "Sun glass",
-      name: l.S.current.sunGlass,
-    ),
+    // CategoryModel(
+    //   id: 5,
+    //   imagePath:
+    //       "assets/images/widget_images/dashboard_overview_icon/ecommerce_admin_icons/category_icons/sunglass.svg",
+    //   //name: "Sun glass",
+    //   name: l.S.current.sunGlass,
+    // ),
     CategoryModel(
       id: 6,
       imagePath:
@@ -65,19 +67,19 @@ class _FilterSidebarState extends State<FilterSidebar> {
       //name: "Fresh Food",
       name: l.S.current.freshFood,
     ),
-    CategoryModel(
-      id: 8,
-      imagePath:
-          "assets/images/widget_images/dashboard_overview_icon/ecommerce_admin_icons/category_icons/smart_phone.svg",
-      //name: "Smart Phone",
-      name: l.S.current.smartPhone,
-    ),
+    // CategoryModel(
+    //   id: 8,
+    //   imagePath:
+    //       "assets/images/widget_images/dashboard_overview_icon/ecommerce_admin_icons/category_icons/smart_phone.svg",
+    //   //name: "Smart Phone",
+    //   name: l.S.current.smartPhone,
+    // ),
     CategoryModel(
       id: 9,
       imagePath:
           "assets/images/widget_images/dashboard_overview_icon/ecommerce_admin_icons/category_icons/computer.svg",
       //name: "Computer",
-      name: l.S.current.computer,
+      name: l.S.current.electronics,
     ),
   ];
 
@@ -95,112 +97,119 @@ class _FilterSidebarState extends State<FilterSidebar> {
     final theme = Theme.of(context);
     final lang = l.S.of(context);
 
-    return Material(
-      color: theme.colorScheme.primaryContainer,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Categories
-          _buildSection(
-            context,
-            //sectionName: 'Categories',
-            sectionName: lang.categories,
-            child: Column(
-              children: List.generate(categories.length, (index) {
-                final category = categories[index];
-                return CategoryTile(
-                  category: category,
-                  isSelected: selectedCategory == category.id,
-                  onTap: (id) => setState(() => selectedCategory = id),
-                );
-              }),
-            ),
-          ),
-
-          // Price Range Filter
-          _buildSection(
-            context,
-            //sectionName: 'Price Range',
-            sectionName: lang.priceRange,
-            child: const Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 20),
-              child: CustomRangeSlider(barWidth: 2),
-            ),
-          ),
-
-          // Product Status
-          _buildSection(
-            context,
-            //sectionName: 'Product Status',
-            sectionName: lang.productStatus,
-            child: Column(
-              children:
-                  {
-                    // "in_stock": "In Stock",
-                    // "on_sale": "On Sale",
-                    "in_stock": lang.inStock,
-                    "on_sale": lang.onSale,
-                  }.entries.map((item) {
-                    final value = statusFilter.contains(item.key);
-                    return CheckboxListTile(
-                      value: value,
-                      onChanged: (v) {
-                        if (statusFilter.contains(item.key)) {
-                          statusFilter.remove(item.key);
-                        } else {
-                          statusFilter.add(item.key);
-                        }
-                        setState(() {});
+    return Consumer<ECommerceMockProductsNotifier>(
+      builder: (context, prov, child) {
+        return Material(
+          color: theme.colorScheme.primaryContainer,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Categories
+              _buildSection(
+                context,
+                //sectionName: 'Categories',
+                sectionName: lang.categories,
+                child: Column(
+                  children: List.generate(categories.length, (index) {
+                    final category = categories[index];
+                    return CategoryTile(
+                      category: category,
+                      isSelected: prov.selectedCategory == category.name,
+                      onTap: (id) {
+                        setState(() => selectedCategory = id);
+                        prov.setSelectedCategory(category.name);
                       },
-                      title: Text(
-                        item.value,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onTertiaryContainer,
-                        ),
-                      ),
-                      controlAffinity: ListTileControlAffinity.leading,
-                      visualDensity: const VisualDensity(
-                        horizontal: -4,
-                        vertical: -4,
-                      ),
-                      contentPadding: const EdgeInsetsDirectional.symmetric(
-                        horizontal: 8,
-                      ),
                     );
-                  }).toList(),
-            ),
-          ),
-
-          // Star Rating
-          _buildSection(
-            context,
-            //sectionName: 'Star Rating',
-            sectionName: lang.starRating,
-            child: Container(
-              padding: const EdgeInsetsDirectional.symmetric(
-                horizontal: 16,
-                vertical: 10,
+                  }),
+                ),
               ),
-              child: Wrap(
-                spacing: 16,
-                runSpacing: 16,
-                children: List.generate(5, (index) {
-                  return _buildStar(
-                    context,
-                    label: (index + 1).toString(),
-                    isSelected: index + 1 == selectedRating,
-                    onSelect: () {
-                      setState(() => selectedRating = index + 1);
-                    },
-                  );
-                }),
+        
+              // Price Range Filter
+              _buildSection(
+                context,
+                //sectionName: 'Price Range',
+                sectionName: lang.priceRange,
+                child: const Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 20),
+                  child: CustomRangeSlider(barWidth: 2),
+                ),
               ),
-            ),
-            showDivider: false,
+        
+              // Product Status
+              _buildSection(
+                context,
+                //sectionName: 'Product Status',
+                sectionName: lang.productStatus,
+                child: Column(
+                  children:
+                      {
+                        // "in_stock": "In Stock",
+                        // "on_sale": "On Sale",
+                        "in_stock": lang.inStock,
+                        "on_sale": lang.onSale,
+                      }.entries.map((item) {
+                        final value = statusFilter.contains(item.key);
+                        return CheckboxListTile(
+                          value: value,
+                          onChanged: (v) {
+                            if (statusFilter.contains(item.key)) {
+                              statusFilter.remove(item.key);
+                            } else {
+                              statusFilter.add(item.key);
+                            }
+                            setState(() {});
+                          },
+                          title: Text(
+                            item.value,
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: theme.colorScheme.onTertiaryContainer,
+                            ),
+                          ),
+                          controlAffinity: ListTileControlAffinity.leading,
+                          visualDensity: const VisualDensity(
+                            horizontal: -4,
+                            vertical: -4,
+                          ),
+                          contentPadding: const EdgeInsetsDirectional.symmetric(
+                            horizontal: 8,
+                          ),
+                        );
+                      }).toList(),
+                ),
+              ),
+        
+              // Star Rating
+              _buildSection(
+                context,
+                //sectionName: 'Star Rating',
+                sectionName: lang.starRating,
+                child: Container(
+                  padding: const EdgeInsetsDirectional.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                  child: Wrap(
+                    spacing: 16,
+                    runSpacing: 16,
+                    children: List.generate(5, (index) {
+                      return _buildStar(
+                        context,
+                        label: (index + 1).toString(),
+                        isSelected: index + 1 == selectedRating,
+                        onSelect: () {
+                          setState(() => selectedRating = index + 1);
+                        },
+                      );
+                    }),
+                  ),
+                ),
+                showDivider: false,
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      }
     );
   }
 
@@ -298,6 +307,7 @@ class CategoryModel {
   final int id;
   final String imagePath;
   final String name;
+  
   const CategoryModel({
     required this.id,
     required this.imagePath,

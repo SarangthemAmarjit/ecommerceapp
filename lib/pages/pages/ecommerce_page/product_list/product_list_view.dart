@@ -28,11 +28,10 @@ class _ProductListViewState extends State<ProductListView> {
     );
   }
 
+
+
   int filterId = 1;
 
-  // Pagination Data
-  int showPerPage = 10;
-  int currentPage = 1;
 
   @override
   void dispose() {
@@ -82,6 +81,7 @@ class _ProductListViewState extends State<ProductListView> {
                     child: SingleChildScrollView(child: comp.FilterSidebar()),
                   ),
             body: SingleChildScrollView(
+              controller: scrollController,
               child: ResponsiveGridRow(
                 children: [
                   if (isDesktop)
@@ -131,20 +131,11 @@ class _ProductListViewState extends State<ProductListView> {
                             selectedLayout: currentLayout,
                             onLayoutSelect: (value) =>
                                 setState(() => currentLayout = value),
-                            perPage: showPerPage,
+                            perPage: productListProv.showPerPage,
                             onPerpageChange: (v) {
-                              if (currentPage >
-                                  comp.PaginationWidget.pageCount) {
-                                setState(
-                                  () => currentPage =
-                                      comp.PaginationWidget.pageCount,
-                                );
-                              }
-                              productListProv.loadProductsForPage(
-                                currentPage,
-                                v!,
-                              );
-                              setState(() => showPerPage = v);
+                         
+                              productListProv.setShowPerPage(v!);
+                            
                             },
                             filterId: filterId,
                             onFilterChange: (v) =>
@@ -171,9 +162,9 @@ class _ProductListViewState extends State<ProductListView> {
                             width: double.maxFinite,
                             child: Align(
                               child: comp.PaginationWidget(
-                                currentPage: currentPage,
+                                currentPage: productListProv.currentPage,
                                 totalItem: productListProv.totalProducts,
-                                perPage: showPerPage,
+                                perPage: productListProv.showPerPage,
                                 onPagePress: (page) =>
                                     _handlePageChange(page, productListProv),
                                 onNextPressed: (page) =>
@@ -197,8 +188,7 @@ class _ProductListViewState extends State<ProductListView> {
   }
 
   void _handlePageChange(int page, ECommerceMockProductsNotifier notifier) {
-    notifier.loadProductsForPage(page, showPerPage);
-    setState(() => currentPage = page);
+   notifier.setCurrentPage(page);
     scrollToTop();
   }
 }

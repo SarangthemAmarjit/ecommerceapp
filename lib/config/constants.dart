@@ -110,40 +110,36 @@ final List<Map<String, dynamic>> products = [
 
 final List<Map<String, dynamic>> categories = [
   {
-    'title': 'Painting',
+    'title': 'T-Shirts',
     'color': const Color(0xFF4FA9AB).withOpacity(0.3),
     'image':
-        'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=300',
+        'assets/images/static_images/productcategory/tshirts.webp',
   },
   {
-    'title': 'Laptop',
+    'title': 'Shoes',
     'color': const Color(0xFFFF9066).withOpacity(0.3),
     'image':
-        'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=300',
+        'assets/images/static_images/productcategory/shoes.webp',
   },
   {
-    'title': 'Beauty',
+    'title': 'Woman Bag',
     'color': const Color(0xFF8B1538).withOpacity(0.3),
     'image':
-        'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300',
+        'assets/images/static_images/productcategory/womanbags.webp',
   },
   {
-    'title': 'Bicycle',
+    'title': 'Fresh Food',
     'color': const Color(0xFF2DB224).withOpacity(0.3),
     'image':
-        'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=300',
+        'assets/images/static_images/productcategory/freshfood.webp',
   },
   {
-    'title': 'Luggage',
+    'title': 'Electronics',
     'color': const Color(0xFFFFCDD2).withOpacity(0.3),
     'image':
-        'https://images.unsplash.com/photo-1565026057447-bc90a3dceb87?w=300',
+        'assets/images/static_images/productcategory/electronics.webp',
   },
-  {
-    'title': 'Backpack',
-    'color': const Color(0xFFFFAB40).withOpacity(0.3),
-    'image': 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300',
-  },
+
 ];
 
 final List<Map<String, dynamic>> departmentStaff = [

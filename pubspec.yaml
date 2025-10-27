@@ -108,6 +108,8 @@ flutter:
     - assets/images/static_images/icons/crypto_icons/
     - assets/images/static_images/placeholder_images/random_placeholders/
     - assets/images/static_images/product_images/
+    - assets/images/static_images/productcategory/
+
     #socail icons
     - assets/images/static_images/icons/social_icons/
   #   - images/a_dot_ham.jpeg

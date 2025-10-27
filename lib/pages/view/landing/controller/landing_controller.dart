@@ -14,6 +14,10 @@ class LandingController extends GetxController {
   String get currentmenu => _currentmenu;
   String? pendingScrollTarget;
   int _selectedmenuindex = 0;
+    bool _showCategoryDropdown = false;
+  bool get showCategoryDropdown => _showCategoryDropdown;
+
+
 
   int _selectedadminpageindex = 0;
   String _admincurrentpage = 'dashboard';
@@ -37,6 +41,11 @@ class LandingController extends GetxController {
   void toggleSelectedIndex(int index) {
     selectedItemIndex = selectedItemIndex == index ? -1 : index;
     update(); // triggers widget rebuild
+  }
+
+    void toggleCategoryDropdown() {
+    _showCategoryDropdown = !_showCategoryDropdown;
+    update();
   }
 
   setcarouselpageindex(int index) {
@@ -93,6 +102,7 @@ class LandingController extends GetxController {
     // _istermpage = false;
     _currentpage = page;
     update();
+    resetScroll();
   }
 
   String? getpdfUrl(String title) {
